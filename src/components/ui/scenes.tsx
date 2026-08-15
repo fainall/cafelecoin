@@ -50,7 +50,10 @@ export function MountainScene({ className = "" }: { className?: string }) {
       <rect y="540" width="1440" height="150" fill="url(#mist)" opacity="0.7" />
 
       {/* Ladera cercana */}
-      <path d="M0 690 L182 626 L378 706 L570 634 L788 718 L1006 646 L1210 724 L1440 666 L1440 900 L0 900Z" fill="#121a0e" />
+      <path
+        d="M0 690 L182 626 L378 706 L570 634 L788 718 L1006 646 L1210 724 L1440 666 L1440 900 L0 900Z"
+        fill="#121a0e"
+      />
     </svg>
   );
 }

@@ -47,7 +47,9 @@ export function Hero({ estate, hero, dictionary, locale }: HeroProps) {
         )}
       </div>
       <div
-        className="from-forest-deep/94 via-forest/55 to-forest absolute inset-0 bg-gradient-to-b"
+        // Oscurece arriba para el titular y abajo para la cinta, dejando
+        // respirar la franja central donde entra la luz del amanecer.
+        className="from-forest-deep/92 via-forest/35 to-forest absolute inset-0 bg-gradient-to-b"
         aria-hidden="true"
       />
 

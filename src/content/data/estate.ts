@@ -36,12 +36,13 @@ export const estate: z.input<typeof EstateSchema> = {
     ],
   },
   image: {
-    src: "/img/finca.jpg",
+    src: "/img/finca.webp",
     alt: {
-      es: "Cafetales de la finca Le Coin en Manizales con las montañas al fondo",
-      en: "Le Coin coffee fields in Manizales with the mountains behind",
+      es: "Cafetales en las laderas de Manizales al amanecer, con la bruma entre las montañas",
+      en: "Coffee fields on the slopes of Manizales at dawn, with mist between the ridges",
     },
-    focus: "center 55%",
+    // El sol y la bruma quedan en la franja central incluso en pantallas anchas.
+    focus: "center 38%",
   },
   processSteps: [
     {

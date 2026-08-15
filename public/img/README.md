@@ -11,6 +11,7 @@ pnpm imagenes
 
 | Archivo                      | Origen                       | Dónde aparece                      |
 | ---------------------------- | ---------------------------- | ---------------------------------- |
+| `finca.webp`                 | Paisaje, solo comprimido     | Fondo de la portada                |
 | `producto-250g.webp`         | Foto de empaque, sin fondo   | Portada, portafolio, ficha de lote |
 | `producto-250g-reverso.webp` | Etiqueta trasera, sin fondo  | Ficha del origen                   |
 | `producto-2500g.webp`        | Bolsas HoReCa, sin fondo     | Portafolio (protagonista)          |
@@ -43,9 +44,12 @@ la foto: en el sitio esos textos los pone el HTML, no la imagen.
 
 ## Lo que aún falta fotografiar
 
-- `finca.jpg` — cafetales con las montañas de Manizales al fondo (fondo de la
-  portada). Mientras no exista, la portada dibuja una cordillera vectorial.
-- `recoleccion.jpg` — manos del recolector con grano maduro.
+- `finca.webp` es hoy una imagen **generada**, no una foto del predio. Sirve
+  para lanzar, pero conviene reemplazarla por una fotografía real de la finca en
+  la próxima cosecha: basta dejar el archivo en `/imagenes` con ese nombre y
+  volver a correr `pnpm imagenes`.
+- `recoleccion.jpg` — manos del recolector con grano maduro (aún sin usar en el
+  sitio; hoy esa sección usa `ambiente-taza.jpg`).
 
 Al agregar una foto nueva, regístrala en `src/content/data/*.ts` (campo `image`)
 para que tenga texto alternativo en español e inglés.

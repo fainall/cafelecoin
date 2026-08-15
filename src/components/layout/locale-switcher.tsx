@@ -25,9 +25,7 @@ export function LocaleSwitcher({ current, className = "" }: LocaleSwitcherProps)
   };
 
   return (
-    <div
-      className={`label flex items-center gap-1.5 ${className}`}
-    >
+    <div className={`label flex items-center gap-1.5 ${className}`}>
       {locales.map((locale, index) => (
         <span key={locale} className="flex items-center gap-1">
           {index > 0 && <span className="text-cream-faint">/</span>}

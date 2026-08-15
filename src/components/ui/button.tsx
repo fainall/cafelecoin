@@ -10,7 +10,8 @@ const variants: Record<Variant, string> = {
   gold: "bg-gold text-forest-deep hover:bg-gold-light",
   outline: "border border-gold/50 text-gold-light hover:bg-gold hover:text-forest-deep",
   outlineDark: "border border-ink/20 text-ink hover:bg-ink hover:text-paper",
-  onGold: "border border-forest-deep/40 text-forest-deep hover:bg-forest-deep hover:text-gold-light",
+  onGold:
+    "border border-forest-deep/40 text-forest-deep hover:bg-forest-deep hover:text-gold-light",
 };
 
 interface LinkButtonProps extends Omit<ComponentProps<typeof Link>, "className"> {

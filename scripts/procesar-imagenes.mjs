@@ -21,6 +21,9 @@ import sharp from "sharp";
 const RAW = "imagenes";
 const OUT = path.join("public", "img");
 
+/** Fotografías de fondo: solo se redimensionan y comprimen. */
+const fondos = [{ src: "finca-original.jpeg", out: "finca.webp", width: 2400, quality: 76 }];
+
 /** Recortes de las piezas de campaña: quitan el texto quemado en la imagen. */
 const ambiente = [
   {
@@ -61,6 +64,25 @@ async function exists(file) {
   }
 }
 
+async function comprimirFondos() {
+  for (const item of fondos) {
+    const src = path.join(RAW, item.src);
+    if (!(await exists(src))) {
+      console.warn(`· falta ${src}, se omite`);
+      continue;
+    }
+
+    const target = path.join(OUT, item.out);
+    await sharp(src)
+      .resize({ width: item.width, withoutEnlargement: true })
+      .webp({ quality: item.quality, effort: 6 })
+      .toFile(target);
+
+    const { width, height } = await sharp(target).metadata();
+    console.log(`fondo     ${item.src} -> ${target}  ${width}×${height}`);
+  }
+}
+
 async function recortarAmbiente() {
   for (const item of ambiente) {
     const src = path.join(RAW, item.src);
@@ -98,9 +120,9 @@ async function ajustarProductos() {
   }
 }
 
-/** Imagen de vista previa para WhatsApp y redes. */
+/** Imagen de vista previa para WhatsApp y redes: el paisaje de origen. */
 async function generarPortada() {
-  const src = path.join(OUT, "ambiente-barra.jpg");
+  const src = path.join(OUT, "finca.webp");
   if (!(await exists(src))) return;
 
   const target = path.join(OUT, "og-cover.jpg");
@@ -112,6 +134,7 @@ async function generarPortada() {
 }
 
 await mkdir(OUT, { recursive: true });
+await comprimirFondos();
 await recortarAmbiente();
 await ajustarProductos();
 await generarPortada();
