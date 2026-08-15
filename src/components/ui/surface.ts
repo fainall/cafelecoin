@@ -1,24 +1,29 @@
 /**
- * El sitio alterna dos superficies. Los componentes que aparecen en ambas
- * reciben el tono como prop en lugar de duplicarse.
+ * El sitio alterna dos superficies: papel crema y verde profundo.
+ * Los componentes que aparecen en ambas reciben el tono como prop en lugar
+ * de duplicarse.
  */
-export type Tone = "dark" | "light";
+export type Tone = "dark" | "paper";
 
 export const surfaces = {
   dark: {
-    bg: "bg-ink",
-    raised: "bg-ink-raised",
-    text: "text-bone",
-    muted: "text-bone-muted",
-    line: "border-ink-line",
-    rule: "bg-ink-line",
+    bg: "bg-forest",
+    raised: "bg-forest-soft",
+    heading: "text-cream",
+    text: "text-cream-dim",
+    faint: "text-cream-faint",
+    line: "border-forest-line",
+    rule: "bg-forest-line",
+    accent: "text-gold-light",
   },
-  light: {
+  paper: {
     bg: "bg-paper",
-    raised: "bg-paper-raised",
-    text: "text-graphite",
-    muted: "text-graphite-muted",
+    raised: "bg-paper-soft",
+    heading: "text-ink",
+    text: "text-ink-soft",
+    faint: "text-ink-soft",
     line: "border-paper-line",
     rule: "bg-paper-line",
+    accent: "text-gold-deep",
   },
 } as const satisfies Record<Tone, Record<string, string>>;

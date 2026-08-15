@@ -1,13 +1,15 @@
 import Link from "next/link";
 
-import { formatWeight, lotPath } from "@/content/helpers";
+import { formatsByLine, formatWeight, lotPath } from "@/content/helpers";
 import type { Format, Lot } from "@/content/schema";
 import type { Dictionary } from "@/i18n";
 import { translate, type Locale } from "@/i18n/config";
+import { FloatingBeans } from "@/components/ui/beans";
 import { LinkButton } from "@/components/ui/button";
+import { RidgeEdge } from "@/components/ui/divider";
 import { ProductShot } from "@/components/ui/product-shot";
 import { Reveal } from "@/components/ui/reveal";
-import { Section, SectionHead } from "@/components/ui/section";
+import { Section } from "@/components/ui/section";
 
 interface ProductsProps {
   formats: Format[];
@@ -16,102 +18,121 @@ interface ProductsProps {
   locale: Locale;
 }
 
-/** Portafolio: una ficha por formato, con la fotografía real del empaque. */
+/** Portafolio: la bolsa suspendida entre granos y las dos líneas comerciales. */
 export function Products({ formats, lots, dictionary, locale }: ProductsProps) {
+  const retail = formatsByLine(formats, "retail");
+  const horeca = formatsByLine(formats, "horeca");
   const featured = lots[0];
-  const ordered = [...formats].sort((a, b) => a.grams - b.grams);
+  // Protagoniza la sección el formato mayor de HoReCa; si no hay, el primero.
+  const showcase = horeca.at(-1) ?? formats[0];
+
+  const groups = [
+    { title: dictionary.portfolio.retail, note: dictionary.portfolio.retailNote, items: retail },
+    { title: dictionary.portfolio.horeca, note: dictionary.portfolio.horecaNote, items: horeca },
+  ];
 
   return (
-    <Section id="portafolio" tone="dark">
-      <SectionHead
-        index="02"
-        label={dictionary.sections.portfolio.eyebrow}
-        title={dictionary.sections.portfolio.title}
-        lede={dictionary.portfolio.valveNote}
-      />
-
-      <div className="mt-16 grid gap-px lg:mt-24 lg:grid-cols-2">
-        {ordered.map((format, index) => (
-          <Reveal
-            key={format.id}
-            delay={index * 110}
-            className="border-ink-line bg-ink-raised flex flex-col border p-8 sm:p-12"
-          >
-            <div className="flex items-baseline justify-between gap-6">
-              <p className="display text-bone text-5xl">{formatWeight(format.grams, locale)}</p>
-              <p className="meta text-bone-muted">
-                {format.line === "retail"
-                  ? dictionary.portfolio.retail
-                  : dictionary.portfolio.horeca}
-              </p>
-            </div>
-
-            <div className="relative mt-10 h-[38svh] min-h-[280px]">
-              <ProductShot
-                src={format.image?.src ?? ""}
-                alt={
-                  format.image
-                    ? translate(format.image.alt, locale)
-                    : `Le Coin ${formatWeight(format.grams, locale)}`
-                }
-                caption={formatWeight(format.grams, locale)}
-                sizes="(max-width: 1024px) 80vw, 40vw"
-                className="h-full w-full"
-              />
-            </div>
-
-            <p className="text-bone-muted mt-10 max-w-[44ch] text-[0.98rem] leading-relaxed">
-              {translate(format.description, locale)}
-            </p>
-
-            <dl className="border-ink-line mt-8 border-t pt-5">
-              {format.valve && (
-                <div className="flex justify-between gap-6 py-1.5">
-                  <dt className="meta text-bone-muted">{dictionary.portfolio.valve}</dt>
-                  <dd className="meta text-cherry-bright">✓</dd>
-                </div>
-              )}
-              {format.tags.map((tag) => (
-                <div key={translate(tag, locale)} className="flex justify-between gap-6 py-1.5">
-                  <dt className="meta text-bone-muted">{translate(tag, locale)}</dt>
-                  <dd />
-                </div>
-              ))}
-            </dl>
-          </Reveal>
-        ))}
-      </div>
-
-      {featured && (
-        <Reveal delay={120} className="mt-14">
-          <LinkButton href={lotPath(locale, featured)} variant="onDark">
-            {dictionary.portfolio.viewLot}
-          </LinkButton>
-        </Reveal>
-      )}
-
-      {lots.length > 1 && (
-        <ul className="border-ink-line mt-16 grid gap-px border-t sm:grid-cols-2">
-          {lots.map((lot, index) => (
-            <Reveal key={lot.slug} as="li" delay={index * 90}>
-              <Link
-                href={lotPath(locale, lot)}
-                className="group border-ink-line flex h-full flex-col border-b py-8 sm:pr-10"
-              >
-                <span className="meta text-bone-muted">
-                  {translate(lot.processLabel, locale)} · {lot.altitudeMasl} msnm
-                </span>
-                <h3 className="font-display text-bone group-hover:text-cherry-bright mt-3 text-2xl transition-colors">
-                  {lot.name}
-                </h3>
-                <p className="text-bone-muted mt-2 max-w-[44ch] text-[0.98rem]">
-                  {translate(lot.summary, locale)}
-                </p>
-              </Link>
+    <>
+      <RidgeEdge fill="fill-forest" behind="bg-paper" />
+      <Section id="portafolio" tone="dark" className="pt-6 sm:pt-10 lg:pt-12">
+        <div className="grid items-center gap-16 lg:grid-cols-2 lg:gap-20">
+          <div>
+            <Reveal>
+              <p className="eyebrow text-gold-light">{dictionary.sections.portfolio.eyebrow}</p>
+              <h2 className="display-xl text-cream mt-5 text-[clamp(2rem,4.6vw,3.6rem)]">
+                {dictionary.sections.portfolio.title}
+              </h2>
             </Reveal>
-          ))}
-        </ul>
-      )}
-    </Section>
+
+            <div className="mt-12 space-y-10">
+              {groups.map((group, groupIndex) => (
+                <Reveal key={group.title} delay={groupIndex * 120}>
+                  <h3 className="font-display text-cream text-xl tracking-[0.08em]">
+                    {group.title}
+                  </h3>
+                  <p className="text-cream-faint mt-1 text-base italic">— {group.note}</p>
+
+                  <ul className="mt-5">
+                    {group.items.map((format) => (
+                      <li
+                        key={format.id}
+                        className="border-forest-line flex flex-wrap items-baseline gap-x-6 gap-y-1 border-b py-4"
+                      >
+                        <span className="font-display text-gold-light w-24 shrink-0 text-lg tracking-[0.08em]">
+                          {formatWeight(format.grams, locale)}
+                        </span>
+                        <span className="text-cream-dim flex-1 text-base leading-relaxed">
+                          {translate(format.description, locale)}
+                        </span>
+                        {format.valve && (
+                          <span className="label text-gold w-full sm:w-auto">
+                            {dictionary.portfolio.valve}
+                          </span>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </Reveal>
+              ))}
+            </div>
+
+            {featured && (
+              <Reveal delay={260} className="mt-12">
+                <LinkButton href={lotPath(locale, featured)}>
+                  {dictionary.portfolio.viewLot}
+                </LinkButton>
+              </Reveal>
+            )}
+          </div>
+
+          <div className="relative flex min-h-[440px] items-center justify-center lg:min-h-[600px]">
+            <FloatingBeans />
+            {showcase && (
+              <Reveal delay={160} className="relative flex w-full items-center justify-center">
+                <span
+                  className="absolute bottom-4 left-1/2 h-12 w-[52%] -translate-x-1/2 rounded-[50%] bg-black/60 blur-2xl"
+                  aria-hidden="true"
+                />
+                <ProductShot
+                  src={showcase.image?.src ?? ""}
+                  alt={
+                    showcase.image
+                      ? translate(showcase.image.alt, locale)
+                      : `Le Coin ${formatWeight(showcase.grams, locale)}`
+                  }
+                  caption={formatWeight(showcase.grams, locale)}
+                  sizes="(max-width: 1024px) 80vw, 480px"
+                  className="relative h-[52svh] max-h-[560px] min-h-[380px] w-full"
+                />
+              </Reveal>
+            )}
+          </div>
+        </div>
+
+        {lots.length > 1 && (
+          <ul className="border-forest-line mt-24 grid gap-px border sm:grid-cols-2">
+            {lots.map((lot, index) => (
+              <Reveal key={lot.slug} as="li" delay={index * 90} className="bg-forest">
+                <Link
+                  href={lotPath(locale, lot)}
+                  className="hover:bg-forest-soft group flex h-full flex-col gap-3 p-8 text-center transition-colors duration-500"
+                >
+                  <span className="label text-gold-light">
+                    {translate(lot.processLabel, locale)} · {lot.altitudeMasl} msnm
+                  </span>
+                  <h3 className="font-display text-cream text-xl tracking-[0.08em]">{lot.name}</h3>
+                  <p className="text-cream-dim mx-auto max-w-[42ch] text-base">
+                    {translate(lot.summary, locale)}
+                  </p>
+                  <span className="label text-cream-faint group-hover:text-gold-light mt-auto pt-4 transition-colors">
+                    {dictionary.portfolio.viewLot}
+                  </span>
+                </Link>
+              </Reveal>
+            ))}
+          </ul>
+        )}
+      </Section>
+    </>
   );
 }

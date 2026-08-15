@@ -1,31 +1,59 @@
 @import "tailwindcss";
 
 /* ─────────────────────────── Tokens de marca ───────────────────────────
-   Tres colores y nada más: negro de tueste, papel cálido y el rojo cereza
-   del propio empaque. Sin degradados dorados ni ornamento.               */
+   Papel crema y verde profundo de cafetal alternándose, con oro antiguo
+   como único acento. Cambiar un token aquí cambia el sitio completo.      */
 @theme {
   /* Superficie oscura */
-  --color-ink: #0d110e;
-  --color-ink-raised: #141915;
-  --color-ink-line: #2a322b;
+  --color-forest: #151a13;
+  --color-forest-deep: #0f130d;
+  --color-forest-soft: #1e241b;
+  --color-forest-line: #303827;
 
   /* Superficie clara */
-  --color-paper: #f5f2ea;
-  --color-paper-raised: #ebe6da;
+  --color-paper: #f4f1e9;
+  --color-paper-soft: #eae5da;
   --color-paper-line: #d5cec0;
 
-  /* Texto */
-  --color-bone: #f5f2ea;
-  --color-bone-muted: #a8ada5;
-  --color-graphite: #171c18;
-  --color-graphite-muted: #5c635b;
+  /* Tinta */
+  --color-ink: #23261f;
+  --color-ink-soft: #565a4e;
+  --color-cream: #f6f3ec;
+  --color-cream-dim: #c6c0af;
+  --color-cream-faint: #97927f;
 
-  /* Acento: el rojo de la cereza madura del empaque */
-  --color-cherry: #9c3a2e;
-  --color-cherry-bright: #c04a3a;
+  /* Acento */
+  --color-gold: #ac9256;
+  --color-gold-light: #d3ba82;
+  --color-gold-deep: #7a6733;
 
-  --font-display: var(--font-newsreader), "Iowan Old Style", Georgia, serif;
-  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --color-danger: #c2603f;
+
+  --font-display: var(--font-cinzel), "Trajan Pro", Georgia, serif;
+  --font-body: var(--font-cormorant), Georgia, serif;
+  --font-label: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+
+  --animate-ticker: ticker 46s linear infinite;
+  --animate-float: float 9s ease-in-out infinite;
+}
+
+@keyframes ticker {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(var(--spin, 0deg));
+  }
+  50% {
+    transform: translateY(-14px) rotate(calc(var(--spin, 0deg) + 4deg));
+  }
 }
 
 @layer base {
@@ -42,75 +70,103 @@
     *::before,
     *::after {
       animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
     }
   }
 
   body {
-    background-color: var(--color-ink);
-    color: var(--color-bone);
-    font-family: var(--font-sans);
-    font-size: 1rem;
-    font-weight: 350;
-    line-height: 1.6;
+    background-color: var(--color-forest);
+    color: var(--color-cream);
+    font-family: var(--font-body);
+    font-size: 1.125rem;
+    font-weight: 400;
+    line-height: 1.68;
     -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
 
   ::selection {
-    background: var(--color-cherry);
-    color: var(--color-paper);
+    background: var(--color-gold);
+    color: var(--color-forest-deep);
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-cherry-bright);
+    outline: 2px solid var(--color-gold-light);
     outline-offset: 3px;
   }
 }
 
 @layer components {
-  /* Título editorial: grande, apretado, caja mixta. Sin versalitas espaciadas. */
-  .display {
-    font-family: var(--font-display);
-    font-weight: 300;
-    letter-spacing: -0.022em;
-    line-height: 0.98;
+  /* Grano de papel: textura, no ruido. */
+  .grain {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    pointer-events: none;
+    opacity: 0.038;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
-  /* Cuerpo de lectura con medida controlada. */
-  .prose-editorial {
+  /* Antetítulo grabado. */
+  .eyebrow {
     font-family: var(--font-display);
-    font-size: 1.1875rem;
-    font-weight: 300;
-    line-height: 1.62;
-    max-width: 60ch;
-  }
-
-  /* Etiqueta de dato: pequeña, sobria, tracking discreto. */
-  .meta {
-    font-family: var(--font-sans);
-    font-size: 0.6875rem;
+    font-size: 0.75rem;
     font-weight: 500;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    margin-right: -0.32em;
+  }
+
+  /* Título de sección: romana espaciada, pero sin exagerar el tracking. */
+  .display-xl {
+    font-family: var(--font-display);
+    font-weight: 400;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    line-height: 1.4;
+    line-height: 1.08;
+    margin-right: -0.1em;
   }
 
-  /* Número de sección en la retícula. */
-  .index {
-    font-family: var(--font-sans);
+  /* Medida de lectura: ningún párrafo pasa de ~66 caracteres. */
+  .prose {
+    max-width: 66ch;
+  }
+
+  .label {
+    font-family: var(--font-label);
     font-size: 0.6875rem;
     font-weight: 500;
-    letter-spacing: 0.08em;
-    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    line-height: 1.5;
   }
 
-  /* Entrada sobria: solo opacidad y un desplazamiento mínimo. */
+  /* Filete central con rombo. */
+  .flourish {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.9rem;
+  }
+
+  .flourish::before,
+  .flourish::after {
+    content: "";
+    display: block;
+    width: 3.5rem;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.4;
+  }
+
   .reveal {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(14px);
     transition:
-      opacity 0.7s ease,
-      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+      opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
     transition-delay: var(--reveal-delay, 0ms);
   }
 

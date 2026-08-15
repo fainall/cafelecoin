@@ -1,7 +1,7 @@
 import { Reveal } from "./reveal";
 import { surfaces, type Tone } from "./surface";
 
-const MAX = 10;
+const SEGMENTS = 10;
 
 interface MeterProps {
   label: string;
@@ -14,33 +14,40 @@ interface MeterProps {
 }
 
 /**
- * Fila de dato sensorial: etiqueta, barra de un pixel y valor tabular.
- * Se lee como una ficha de catación, no como un indicador de videojuego.
+ * Barra segmentada del perfil sensorial. Los segmentos se encienden en cascada
+ * al entrar en viewport, sin JavaScript adicional.
  */
-export function Meter({ label, value, display, delay = 0, tone = "light" }: MeterProps) {
-  const ratio = Math.min(Math.max(value, 0), MAX) / MAX;
+export function Meter({ label, value, display, delay = 0, tone = "dark" }: MeterProps) {
+  const filled = Math.round(Math.min(Math.max(value, 0), SEGMENTS));
   const s = surfaces[tone];
+  const empty = tone === "dark" ? "bg-forest-line" : "bg-paper-line";
 
   return (
     <Reveal className="group" delay={delay}>
       <div
-        className={`grid grid-cols-[7rem_1fr_4rem] items-center gap-5 border-b py-4 ${s.line}`}
+        className={`flex items-center gap-5 border-b py-3.5 ${s.line}`}
         role="meter"
         aria-valuemin={0}
-        aria-valuemax={MAX}
+        aria-valuemax={SEGMENTS}
         aria-valuenow={value}
-        aria-label={`${label}: ${display ?? `${value} de ${MAX}`}`}
+        aria-label={`${label}: ${display ?? `${value} de ${SEGMENTS}`}`}
       >
-        <span className={`meta ${s.muted}`}>{label}</span>
+        <span className={`label w-24 shrink-0 ${s.faint}`}>{label}</span>
 
-        <span className={`relative block h-px ${s.rule}`} aria-hidden="true">
-          <span
-            className="bg-cherry absolute inset-y-0 left-0 origin-left scale-x-0 transition-transform duration-[900ms] ease-out group-data-[visible=true]:scale-x-100"
-            style={{ width: `${ratio * 100}%`, transitionDelay: `${delay + 120}ms` }}
-          />
+        <span className="flex flex-1 gap-1.5" aria-hidden="true">
+          {Array.from({ length: SEGMENTS }).map((_, index) => (
+            <span
+              key={index}
+              data-on={index < filled}
+              style={{ transitionDelay: `${delay + index * 55}ms` }}
+              className={`h-1.5 flex-1 transition-colors duration-500 ${empty} data-[on=true]:group-data-[visible=true]:bg-gold`}
+            />
+          ))}
         </span>
 
-        <span className={`index text-right tabular-nums ${s.text}`}>{display ?? value}</span>
+        <span className={`font-display w-16 shrink-0 text-right text-sm ${s.heading}`}>
+          {display ?? value}
+        </span>
       </div>
     </Reveal>
   );

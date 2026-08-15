@@ -1,9 +1,13 @@
 import type { Estate, Highlight } from "@/content/schema";
 import { translate, type Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n";
+import { LinkButton } from "@/components/ui/button";
+import { TornEdge } from "@/components/ui/divider";
+import { featureIcons } from "@/components/ui/feature-icons";
 import { Photo } from "@/components/ui/photo";
 import { Reveal } from "@/components/ui/reveal";
-import { Section, SectionHead } from "@/components/ui/section";
+import { LeafScene } from "@/components/ui/scenes";
+import { Section, SectionHeading } from "@/components/ui/section";
 
 interface CoffeeProps {
   estate: Estate;
@@ -12,82 +16,79 @@ interface CoffeeProps {
   locale: Locale;
 }
 
-/** El relato de marca y los pilares del origen, sobre papel. */
+/** Relato de marca sobre papel, centrado, con los tres pilares del origen. */
 export function Coffee({ estate, highlights, dictionary, locale }: CoffeeProps) {
-  const [lede, ...paragraphs] = translate(estate.story, locale);
+  const paragraphs = translate(estate.story, locale);
 
   return (
-    <Section id="historia" tone="light">
-      <SectionHead
-        index="01"
-        label={dictionary.sections.story.eyebrow}
-        title={dictionary.sections.story.title}
-        tone="light"
-      />
+    <>
+      <TornEdge fill="fill-paper" behind="bg-forest" />
+      <Section id="historia" tone="paper" className="pt-16 sm:pt-20 lg:pt-24">
+        <SectionHeading
+          eyebrow={dictionary.sections.story.eyebrow}
+          title={dictionary.sections.story.title}
+          tone="paper"
+        />
 
-      <div className="mt-16 grid gap-12 lg:mt-24 lg:grid-cols-12 lg:gap-12">
-        <div className="lg:col-span-3" />
-        <div className="lg:col-span-5">
-          <Reveal>
-            <p className="prose-editorial text-graphite text-[1.35rem] leading-[1.5]">{lede}</p>
-          </Reveal>
-        </div>
-        <div className="lg:col-span-4">
+        <div className="prose mx-auto mt-12 text-center">
           {paragraphs.map((paragraph, index) => (
-            <Reveal key={index} delay={index * 80}>
-              <p className="text-graphite-muted mt-6 max-w-[46ch] text-[0.98rem] leading-relaxed first:mt-0">
-                {paragraph}
-              </p>
+            <Reveal key={index} delay={index * 90}>
+              <p className="text-ink-soft mt-5 leading-relaxed first:mt-0">{paragraph}</p>
             </Reveal>
           ))}
-          <Reveal delay={200}>
-            <p className="font-display text-graphite border-paper-line mt-8 border-l pl-5 text-lg italic">
+
+          <Reveal delay={280}>
+            <p className="font-display text-ink mt-9 text-sm tracking-[0.14em] uppercase">
               {translate(estate.claim, locale)}
             </p>
           </Reveal>
-        </div>
-      </div>
 
-      <Reveal delay={80} className="mt-20 lg:mt-28">
-        <figure>
-          <Photo
-            src="/img/ambiente-taza.jpg"
-            alt={
-              locale === "en"
-                ? "Le Coin 250 g bag next to a freshly served cup of coffee"
-                : "Bolsa de 250 g de Le Coin junto a una taza de café recién servida"
-            }
-            className="aspect-[4/3] w-full sm:aspect-[16/9] lg:aspect-[21/9]"
-            sizes="(max-width: 1024px) 100vw, 100rem"
-            focus="center 20%"
-            fallback={<div className="bg-paper-raised h-full w-full" />}
-          />
-          <figcaption className="border-paper-line text-graphite-muted meta mt-4 border-t pt-4">
-            {locale === "en"
-              ? "Retail format · 250 g · 100% arabica"
-              : "Formato retail · 250 g · 100% café arábico"}
-          </figcaption>
-        </figure>
-      </Reveal>
-
-      <ol className="border-paper-line mt-20 grid gap-px border-t sm:grid-cols-3 lg:mt-28">
-        {highlights.map((highlight, index) => (
-          <Reveal
-            key={highlight.id}
-            as="li"
-            delay={index * 90}
-            className="border-paper-line border-b py-8 sm:border-b-0 sm:pr-10"
-          >
-            <span className="index text-cherry">{String(index + 1).padStart(2, "0")}</span>
-            <h3 className="font-display text-graphite mt-4 text-2xl">
-              {translate(highlight.title, locale)}
-            </h3>
-            <p className="text-graphite-muted mt-3 max-w-[38ch] text-[0.98rem] leading-relaxed">
-              {translate(highlight.body, locale)}
-            </p>
+          <Reveal delay={360} className="mt-10">
+            <LinkButton href="#origen" variant="outlineDark">
+              {dictionary.common.learnMore}
+            </LinkButton>
           </Reveal>
-        ))}
-      </ol>
-    </Section>
+        </div>
+
+        <Reveal delay={80} className="mt-20 lg:mt-24">
+          <figure>
+            <Photo
+              src="/img/ambiente-taza.jpg"
+              alt={
+                locale === "en"
+                  ? "Le Coin 250 g bag next to a freshly served cup of coffee"
+                  : "Bolsa de 250 g de Le Coin junto a una taza de café recién servida"
+              }
+              className="aspect-[4/3] w-full sm:aspect-[16/9] lg:aspect-[2/1]"
+              sizes="(max-width: 1024px) 100vw, 82rem"
+              focus="center 12%"
+              fallback={<LeafScene />}
+            />
+            <figcaption className="label text-ink-soft mt-4 text-center">
+              {locale === "en"
+                ? "Retail format · 250 g · 100% arabica coffee"
+                : "Formato retail · 250 g · 100% café arábico"}
+            </figcaption>
+          </figure>
+        </Reveal>
+
+        <ul className="mx-auto mt-20 grid max-w-5xl gap-14 sm:grid-cols-3 lg:mt-24">
+          {highlights.map((highlight, index) => {
+            const Icon = featureIcons[highlight.icon];
+            return (
+              <Reveal key={highlight.id} as="li" delay={index * 110} className="text-center">
+                <Icon className="text-gold-deep mx-auto h-16 w-16" />
+                <h3 className="font-display text-ink mt-6 text-sm tracking-[0.2em] uppercase">
+                  {translate(highlight.title, locale)}
+                </h3>
+                <p className="text-ink-soft mx-auto mt-3 max-w-[34ch] text-base leading-relaxed">
+                  {translate(highlight.body, locale)}
+                </p>
+              </Reveal>
+            );
+          })}
+        </ul>
+      </Section>
+    </>
   );
 }

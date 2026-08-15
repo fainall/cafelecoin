@@ -6,29 +6,26 @@ interface BandProps {
   dictionary: Dictionary;
 }
 
-/** Un solo enunciado a página completa: el punto de reposo del recorrido. */
+/** Banda dorada: un solo enunciado y la llamada a solicitar muestras. */
 export function Band({ dictionary }: BandProps) {
   return (
-    <section className="bg-cherry py-24 sm:py-32">
-      <div className="mx-auto w-full max-w-[100rem] px-6 sm:px-10 lg:px-16">
-        <div className="grid gap-10 lg:grid-cols-12">
-          <div className="lg:col-span-8">
-            <Reveal>
-              <p className="display text-paper text-[clamp(2rem,4.4vw,3.6rem)]">
-                {dictionary.band.title}
-              </p>
-            </Reveal>
-            <Reveal delay={90}>
-              <p className="prose-editorial text-paper/80 mt-6">{dictionary.band.subtitle}</p>
-            </Reveal>
-          </div>
-
-          <Reveal delay={160} className="flex items-end lg:col-span-4 lg:justify-end">
-            <LinkButton href="#contacto" variant="onCherry">
-              {dictionary.band.cta}
-            </LinkButton>
-          </Reveal>
-        </div>
+    <section className="bg-gold relative overflow-hidden py-20 text-center sm:py-24">
+      <div className="relative mx-auto max-w-3xl px-6">
+        <Reveal>
+          <h2 className="display-xl text-forest-deep text-[clamp(1.6rem,3.6vw,2.8rem)]">
+            {dictionary.band.title}
+          </h2>
+        </Reveal>
+        <Reveal delay={120}>
+          <p className="text-forest-deep/85 mx-auto mt-5 max-w-xl text-lg">
+            {dictionary.band.subtitle}
+          </p>
+        </Reveal>
+        <Reveal delay={220} className="mt-9">
+          <LinkButton href="#contacto" variant="onGold">
+            {dictionary.band.cta}
+          </LinkButton>
+        </Reveal>
       </div>
     </section>
   );

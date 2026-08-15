@@ -14,8 +14,8 @@ interface ProductShotProps {
 }
 
 /**
- * Fotografía de producto recortada. Si el archivo aún no existe se muestra un
- * panel neutro con el nombre del formato: nunca un dibujo de relleno.
+ * Fotografía de producto recortada, con sombra de apoyo para que no flote.
+ * Si el archivo aún no existe se muestra un panel neutro con el formato.
  */
 export function ProductShot({
   src,
@@ -38,7 +38,7 @@ export function ProductShot({
       className={className}
       fallback={
         <div className={`flex h-full w-full items-center justify-center border ${s.line}`}>
-          <span className={`meta ${s.muted}`}>{caption}</span>
+          <span className={`label ${s.faint}`}>{caption}</span>
         </div>
       }
     />

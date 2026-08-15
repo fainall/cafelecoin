@@ -2,7 +2,7 @@ import type { Estate, Testimonial } from "@/content/schema";
 import type { Dictionary } from "@/i18n";
 import { translate, type Locale } from "@/i18n/config";
 import { Reveal } from "@/components/ui/reveal";
-import { Section, SectionHead } from "@/components/ui/section";
+import { Section, SectionHeading } from "@/components/ui/section";
 
 interface TestimonialsProps {
   testimonials: Testimonial[];
@@ -17,36 +17,28 @@ interface TestimonialsProps {
  */
 export function Testimonials({ testimonials, estate, dictionary, locale }: TestimonialsProps) {
   return (
-    <Section id="testimonios" tone="light">
-      <SectionHead
-        index="04"
-        label={dictionary.sections.testimonials.eyebrow}
+    <Section id="testimonios" tone="paper">
+      <SectionHeading
+        eyebrow={dictionary.sections.testimonials.eyebrow}
         title={dictionary.sections.testimonials.title}
-        tone="light"
+        tone="paper"
       />
 
       {testimonials.length === 0 ? (
-        <Reveal delay={90} className="mt-16 grid lg:grid-cols-12">
-          <blockquote className="lg:col-span-8 lg:col-start-4">
-            <p className="display text-graphite text-[clamp(1.75rem,3.6vw,2.9rem)]">
-              {translate(estate.claim, locale)}
-            </p>
-          </blockquote>
+        <Reveal delay={120} className="mx-auto mt-12 max-w-2xl text-center">
+          <p className="font-display text-ink text-[clamp(1.4rem,3vw,2.1rem)] leading-snug">
+            «{translate(estate.claim, locale)}»
+          </p>
         </Reveal>
       ) : (
-        <ul className="border-paper-line mt-16 grid gap-px border-t lg:grid-cols-2">
+        <ul className="mx-auto mt-12 grid max-w-5xl gap-12 sm:grid-cols-2">
           {testimonials.map((testimonial, index) => (
-            <Reveal
-              key={testimonial.id}
-              as="li"
-              delay={index * 90}
-              className="border-paper-line border-b py-10 lg:pr-12"
-            >
-              <blockquote className="font-display text-graphite text-2xl leading-snug">
-                {translate(testimonial.quote, locale)}
-              </blockquote>
-              <p className="meta text-cherry mt-6">{testimonial.author}</p>
-              <p className="meta text-graphite-muted mt-1">{translate(testimonial.role, locale)}</p>
+            <Reveal key={testimonial.id} as="li" delay={index * 110} className="text-center">
+              <p className="text-ink text-xl leading-relaxed italic">
+                «{translate(testimonial.quote, locale)}»
+              </p>
+              <p className="label text-gold-deep mt-6">{testimonial.author}</p>
+              <p className="label text-ink-soft mt-1">{translate(testimonial.role, locale)}</p>
             </Reveal>
           ))}
         </ul>

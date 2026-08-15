@@ -23,8 +23,8 @@ interface SampleRequestFormProps {
 type Status = "idle" | "submitting" | "success" | "error";
 
 const fieldClass =
-  "w-full border-b border-ink-line bg-transparent py-3 font-sans text-sm text-bone placeholder:text-bone-muted focus:border-cherry focus:outline-none transition-colors";
-const labelClass = "meta text-bone-muted";
+  "w-full border-b border-forest-line bg-transparent py-3 font-sans text-sm text-cream placeholder:text-cream-faint focus:border-gold focus:outline-none transition-colors";
+const labelClass = "label text-cream-faint";
 
 export function SampleRequestForm({
   dictionary,
@@ -85,8 +85,8 @@ export function SampleRequestForm({
 
   if (status === "success") {
     return (
-      <div role="status" className="border-cherry/50 bg-cherry/10 border p-10 text-center">
-        <p className="text-bone text-xl leading-relaxed italic">{t.success}</p>
+      <div role="status" className="border-gold/50 bg-gold/10 border p-10 text-center">
+        <p className="text-cream text-xl leading-relaxed italic">{t.success}</p>
       </div>
     );
   }
@@ -94,8 +94,8 @@ export function SampleRequestForm({
   return (
     <form onSubmit={handleSubmit} noValidate className="grid gap-8 sm:grid-cols-2">
       <div className="sm:col-span-2">
-        <p className="font-display text-bone text-sm tracking-[0.28em] uppercase">{t.title}</p>
-        <p className="text-bone-muted mt-3">{t.intro}</p>
+        <p className="font-display text-cream text-sm tracking-[0.28em] uppercase">{t.title}</p>
+        <p className="text-cream-faint mt-3">{t.intro}</p>
       </div>
 
       <Field label={t.name} name="name" error={errors.name} required>
@@ -130,7 +130,7 @@ export function SampleRequestForm({
       <Field label={t.country} name="country" error={errors.country} required>
         <select id="country" name="country" required defaultValue="CL" className={fieldClass}>
           {leadCountries.map((code) => (
-            <option key={code} value={code} className="bg-ink">
+            <option key={code} value={code} className="bg-forest-deep">
               {t.countries[code]}
             </option>
           ))}
@@ -140,7 +140,7 @@ export function SampleRequestForm({
       <Field label={t.channel} name="channel" error={errors.channel} required>
         <select id="channel" name="channel" required defaultValue="cafe" className={fieldClass}>
           {leadChannels.map((code) => (
-            <option key={code} value={code} className="bg-ink">
+            <option key={code} value={code} className="bg-forest-deep">
               {t.channels[code]}
             </option>
           ))}
@@ -169,13 +169,13 @@ export function SampleRequestForm({
           {formats.map((format) => (
             <label
               key={format.id}
-              className="border-ink-line text-bone-muted has-checked:border-cherry has-checked:text-cherry-bright meta flex cursor-pointer items-center gap-2 border px-4 py-2.5 transition-colors"
+              className="border-forest-line text-cream-faint has-checked:border-gold has-checked:text-gold-light label flex cursor-pointer items-center gap-2 border px-4 py-2.5 transition-colors"
             >
               <input
                 type="checkbox"
                 name="formatIds"
                 value={format.id}
-                className="accent-cherry h-3 w-3"
+                className="accent-gold h-3 w-3"
               />
               {format.label}
             </label>
@@ -205,12 +205,12 @@ export function SampleRequestForm({
       </div>
 
       <div className="sm:col-span-2">
-        <label className="text-bone-muted flex cursor-pointer items-start gap-3 text-sm">
+        <label className="text-cream-faint flex cursor-pointer items-start gap-3 text-sm">
           <input
             type="checkbox"
             name="consent"
             required
-            className="accent-cherry mt-1 h-4 w-4 shrink-0"
+            className="accent-gold mt-1 h-4 w-4 shrink-0"
           />
           <span>{t.consent}</span>
         </label>
@@ -245,7 +245,7 @@ function Field({ label, name, error, required, className = "", children }: Field
     <div className={className}>
       <label htmlFor={name} className={labelClass}>
         {label}
-        {required && <span className="text-cherry-bright"> *</span>}
+        {required && <span className="text-gold-light"> *</span>}
       </label>
       <div className="mt-2">{children}</div>
       {error && (

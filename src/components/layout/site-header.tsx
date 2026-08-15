@@ -23,8 +23,8 @@ interface SiteHeaderProps {
 }
 
 /**
- * Cabecera de trabajo: logotipo a la izquierda, navegación real a la derecha.
- * En móvil, un menú a pantalla completa.
+ * Cabecera ceremonial: logotipo centrado, menú a la izquierda, idioma a la
+ * derecha. El menú abre a pantalla completa con los enlaces centrados.
  */
 export function SiteHeader({
   locale,
@@ -39,7 +39,7 @@ export function SiteHeader({
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 16);
+    const onScroll = () => setScrolled(window.scrollY > 24);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -65,68 +65,49 @@ export function SiteHeader({
     <>
       <a
         href="#contenido"
-        className="focus:bg-cherry focus:text-paper sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[70] focus:px-4 focus:py-2 focus:text-xs"
+        className="focus:bg-gold focus:text-forest-deep sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[70] focus:px-4 focus:py-2 focus:text-xs"
       >
         {skipLabel}
       </a>
 
       <header
         data-scrolled={scrolled}
-        className="data-[scrolled=true]:border-ink-line data-[scrolled=true]:bg-ink/92 fixed inset-x-0 top-0 z-50 border-b border-transparent transition-colors duration-300 data-[scrolled=true]:backdrop-blur-lg"
+        className="data-[scrolled=true]:border-forest-line/70 data-[scrolled=true]:bg-forest/92 fixed inset-x-0 top-0 z-50 border-b border-transparent transition-all duration-500 data-[scrolled=true]:backdrop-blur-xl"
       >
-        <div className="mx-auto flex w-full max-w-[100rem] items-center justify-between gap-10 px-6 py-5 sm:px-10 lg:px-16">
+        <div className="mx-auto grid w-full max-w-[82rem] grid-cols-3 items-center px-6 py-4 sm:px-10">
+          <button
+            type="button"
+            aria-expanded={open}
+            aria-controls="menu-principal"
+            onClick={() => setOpen((value) => !value)}
+            className="text-cream hover:text-gold-light flex w-fit flex-col gap-[5px] py-2 transition-colors"
+          >
+            <span className="sr-only">{menuLabel}</span>
+            <span
+              data-open={open}
+              className="block h-px w-7 bg-current transition-transform duration-300 data-[open=true]:translate-y-[6px] data-[open=true]:rotate-45"
+            />
+            <span
+              data-open={open}
+              className="block h-px w-7 bg-current transition-opacity duration-300 data-[open=true]:opacity-0"
+            />
+            <span
+              data-open={open}
+              className="block h-px w-5 bg-current transition-all duration-300 data-[open=true]:w-7 data-[open=true]:-translate-y-[6px] data-[open=true]:-rotate-45"
+            />
+          </button>
+
           <Link
             href={`/${locale}`}
             onClick={() => setOpen(false)}
-            className="text-bone hover:text-cherry-bright shrink-0 transition-colors"
+            className="text-cream hover:text-gold-light mx-auto transition-colors"
             aria-label={brand}
           >
-            <Wordmark className="h-10 w-auto" />
+            <Wordmark className="h-12 w-auto sm:h-14" />
           </Link>
 
-          <nav aria-label={menuLabel} className="hidden items-center gap-9 lg:flex">
-            {items.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                className="meta text-bone-muted hover:text-bone transition-colors"
-              >
-                {item.label}
-              </a>
-            ))}
-          </nav>
-
-          <div className="flex items-center gap-6">
-            <LocaleSwitcher current={locale} className="hidden sm:flex" />
-            <a
-              href={ctaHref}
-              target="_blank"
-              rel="noopener"
-              className="bg-cherry text-paper hover:bg-cherry-bright meta hidden px-5 py-3 transition-colors sm:inline-block"
-            >
-              {ctaLabel}
-            </a>
-            <button
-              type="button"
-              aria-expanded={open}
-              aria-controls="menu-principal"
-              onClick={() => setOpen((value) => !value)}
-              className="text-bone flex w-fit flex-col gap-[5px] py-2 lg:hidden"
-            >
-              <span className="sr-only">{menuLabel}</span>
-              <span
-                data-open={open}
-                className="block h-px w-6 bg-current transition-transform duration-300 data-[open=true]:translate-y-[6px] data-[open=true]:rotate-45"
-              />
-              <span
-                data-open={open}
-                className="block h-px w-6 bg-current transition-opacity duration-300 data-[open=true]:opacity-0"
-              />
-              <span
-                data-open={open}
-                className="block h-px w-6 bg-current transition-transform duration-300 data-[open=true]:-translate-y-[6px] data-[open=true]:-rotate-45"
-              />
-            </button>
+          <div className="flex justify-end">
+            <LocaleSwitcher current={locale} />
           </div>
         </div>
       </header>
@@ -134,32 +115,29 @@ export function SiteHeader({
       <div
         id="menu-principal"
         hidden={!open}
-        className="bg-ink fixed inset-0 z-40 flex flex-col justify-center px-8 lg:hidden"
+        className="bg-forest-deep/98 fixed inset-0 z-40 flex flex-col items-center justify-center gap-2 px-8 backdrop-blur-xl"
       >
-        <nav aria-label={menuLabel} className="flex flex-col">
+        <nav aria-label={menuLabel} className="flex flex-col items-center gap-1">
           {items.map((item) => (
             <a
               key={item.href}
               href={item.href}
               onClick={() => setOpen(false)}
-              className="border-ink-line font-display text-bone hover:text-cherry-bright border-b py-5 text-3xl transition-colors"
+              className="font-display text-cream hover:text-gold-light py-3 text-2xl tracking-[0.16em] uppercase transition-colors sm:text-3xl"
             >
               {item.label}
             </a>
           ))}
         </nav>
 
-        <div className="mt-10 flex items-center justify-between">
-          <LocaleSwitcher current={locale} />
-          <a
-            href={ctaHref}
-            target="_blank"
-            rel="noopener"
-            className="bg-cherry text-paper meta px-5 py-3"
-          >
-            {ctaLabel}
-          </a>
-        </div>
+        <a
+          href={ctaHref}
+          target="_blank"
+          rel="noopener"
+          className="border-gold/50 text-gold-light hover:bg-gold hover:text-forest-deep font-display mt-10 border px-9 py-4 text-[0.72rem] tracking-[0.22em] uppercase transition-colors"
+        >
+          {ctaLabel}
+        </a>
       </div>
     </>
   );

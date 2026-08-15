@@ -3,6 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { Contact } from "@/components/sections/contact";
+import { FloatingBeans } from "@/components/ui/beans";
+import { TornEdge } from "@/components/ui/divider";
 import { Meter } from "@/components/ui/meter";
 import { ProductShot } from "@/components/ui/product-shot";
 import { Reveal } from "@/components/ui/reveal";
@@ -77,76 +79,84 @@ export default async function LotPage({
 
   return (
     <>
-      <Section tone="dark" className="pt-36 pb-0 sm:pt-40 lg:pt-44">
-        <Reveal>
+      <Section tone="dark" className="pt-36 sm:pt-40">
+        <Reveal className="text-center">
           <Link
             href={`/${locale}#portafolio`}
-            className="meta text-bone-muted hover:text-bone transition-colors"
+            className="label text-cream-faint hover:text-gold-light transition-colors"
           >
             ← {dictionary.lot.backToPortfolio}
           </Link>
         </Reveal>
 
-        <div className="mt-12 grid gap-12 lg:grid-cols-12">
-          <div className="lg:col-span-7">
-            <Reveal delay={80}>
-              <p className="meta text-cherry-bright">
-                {dictionary.lot.status[lot.status]} · {translate(lot.processLabel, locale)}
-              </p>
-              <h1 className="display text-bone mt-6 text-[clamp(2.6rem,6vw,5rem)]">{lot.name}</h1>
-              <p className="prose-editorial text-bone-muted mt-8">
-                {translate(lot.summary, locale)}
-              </p>
-              <p className="meta text-bone-muted mt-8">
-                {dictionary.lot.harvestWindow} · {translate(lot.harvestWindow, locale)}
-              </p>
-            </Reveal>
-          </div>
+        <Reveal delay={80} className="mt-10 text-center">
+          <p className="eyebrow text-gold-light">
+            {dictionary.lot.status[lot.status]} · {translate(lot.processLabel, locale)}
+          </p>
+          <h1 className="display-xl text-cream mt-5 text-[clamp(1.9rem,4.4vw,3.4rem)]">
+            {lot.name}
+          </h1>
+          <p className="text-cream-dim prose mx-auto mt-6 leading-relaxed">
+            {translate(lot.summary, locale)}
+          </p>
+          <p className="label text-cream-faint mt-6">
+            {dictionary.lot.harvestWindow} · {translate(lot.harvestWindow, locale)}
+          </p>
+        </Reveal>
 
-          <div className="lg:col-span-5">
-            {formats[0] && (
-              <Reveal delay={140} className="border-ink-line bg-ink-raised border p-10">
-                <ProductShot
-                  src={formats[0].image?.src ?? ""}
-                  alt={formats[0].image ? translate(formats[0].image.alt, locale) : lot.name}
-                  caption={formatWeight(formats[0].grams, locale)}
-                  priority
-                  sizes="(max-width: 1024px) 70vw, 30vw"
-                  className="h-[42svh] min-h-[300px] w-full"
-                />
-              </Reveal>
-            )}
-          </div>
+        <div className="relative mx-auto mt-16 flex h-[52svh] max-w-3xl items-end justify-center">
+          <FloatingBeans className="hidden sm:block" />
+          {formats[0] && (
+            <Reveal delay={160} className="relative flex h-full w-full items-end justify-center">
+              <span
+                className="absolute bottom-2 left-1/2 h-10 w-[42%] -translate-x-1/2 rounded-[50%] bg-black/55 blur-2xl"
+                aria-hidden="true"
+              />
+              <ProductShot
+                src={formats[0].image?.src ?? ""}
+                alt={formats[0].image ? translate(formats[0].image.alt, locale) : lot.name}
+                caption={formatWeight(formats[0].grams, locale)}
+                priority
+                sizes="(max-width: 640px) 62vw, 340px"
+                className="relative h-full w-[min(62vw,300px)]"
+              />
+            </Reveal>
+          )}
         </div>
       </Section>
 
-      <Section tone="light">
-        <div className="grid gap-14 lg:grid-cols-12 lg:gap-12">
-          <div className="lg:col-span-3">
+      <TornEdge fill="fill-paper" behind="bg-forest" />
+      <Section tone="paper" className="pt-16 sm:pt-20">
+        <div className="grid gap-16 lg:grid-cols-2 lg:gap-20">
+          <div>
             <Reveal>
-              <p className="meta text-graphite-muted">{dictionary.lot.technicalSheet}</p>
+              <h2 className="label text-gold-deep mb-6 text-center lg:text-left">
+                {dictionary.lot.technicalSheet}
+              </h2>
             </Reveal>
-          </div>
-
-          <div className="lg:col-span-5">
             <TechnicalSheet
               lot={lot}
               estate={estate}
               dictionary={dictionary}
               locale={locale}
-              tone="light"
+              tone="paper"
             />
           </div>
 
-          <div className="lg:col-span-4">
+          <div>
             <Reveal>
-              <p className="meta text-graphite-muted">{dictionary.lot.cupping}</p>
+              <h2 className="label text-gold-deep mb-6 text-center lg:text-left">
+                {dictionary.lot.cupping}
+              </h2>
             </Reveal>
 
             <Reveal delay={60}>
-              <ul className="mt-5 flex flex-wrap gap-x-5 gap-y-2">
+              <ul className="flex flex-wrap justify-center gap-2 lg:justify-start">
                 {lot.sensory.notes.map((note) => (
-                  <li key={translate(note, locale)} className="font-display text-graphite text-lg">
+                  <li
+                    key={translate(note, locale)}
+                    className="border-paper-line text-ink-soft label border px-4 py-2"
+                  >
                     {translate(note, locale)}
                   </li>
                 ))}
@@ -157,21 +167,21 @@ export default async function LotPage({
               {lot.sensory.attributes.map((attribute, index) => (
                 <Meter
                   key={attribute.id}
-                  tone="light"
+                  tone="paper"
                   label={translate(attribute.label, locale)}
                   value={attribute.value}
                   display={translateOrNull(attribute.display, locale)}
-                  delay={index * 50}
+                  delay={index * 60}
                 />
               ))}
             </div>
 
             {lot.sensory.scaScore !== undefined && (
-              <Reveal delay={160} className="mt-8 flex items-baseline gap-4">
-                <span className="display text-graphite text-5xl tabular-nums">
+              <Reveal delay={200} className="mt-10 flex items-baseline gap-4">
+                <span className="font-display text-ink text-5xl leading-none">
                   {lot.sensory.scaScore}
                 </span>
-                <span className="meta text-graphite-muted">{dictionary.profile.scoreUnit}</span>
+                <span className="label text-gold-deep">{dictionary.profile.scoreUnit}</span>
               </Reveal>
             )}
           </div>
@@ -179,39 +189,39 @@ export default async function LotPage({
 
         <div className="mt-24">
           <Reveal>
-            <p className="meta text-graphite-muted">{dictionary.lot.availableFormats}</p>
+            <h2 className="label text-gold-deep text-center">{dictionary.lot.availableFormats}</h2>
           </Reveal>
 
-          <div className="border-paper-line mt-6 grid gap-px border-t sm:grid-cols-2">
+          <div className="mt-12 grid gap-12 sm:grid-cols-2">
             {formats.map((format, index) => (
-              <Reveal
-                key={format.id}
-                delay={index * 80}
-                className="border-paper-line flex items-center gap-8 border-b py-10 sm:pr-10"
-              >
-                <ProductShot
-                  src={format.image?.src ?? ""}
-                  alt={
-                    format.image
-                      ? translate(format.image.alt, locale)
-                      : `Le Coin ${formatWeight(format.grams, locale)}`
-                  }
-                  caption={formatWeight(format.grams, locale)}
-                  tone="light"
-                  sizes="(max-width: 640px) 40vw, 200px"
-                  className="h-48 w-32 shrink-0"
-                />
-                <div>
-                  <p className="display text-graphite text-3xl">
-                    {formatWeight(format.grams, locale)}
-                  </p>
-                  <p className="text-graphite-muted mt-3 max-w-[36ch] text-[0.95rem] leading-relaxed">
-                    {translate(format.description, locale)}
-                  </p>
-                  {format.valve && (
-                    <p className="meta text-cherry mt-4">{dictionary.portfolio.valve}</p>
-                  )}
+              <Reveal key={format.id} delay={index * 90} className="text-center">
+                <div className="relative mx-auto flex h-64 w-full items-end justify-center">
+                  <span
+                    className="absolute bottom-1 left-1/2 h-6 w-[34%] -translate-x-1/2 rounded-[50%] bg-black/20 blur-xl"
+                    aria-hidden="true"
+                  />
+                  <ProductShot
+                    src={format.image?.src ?? ""}
+                    alt={
+                      format.image
+                        ? translate(format.image.alt, locale)
+                        : `Le Coin ${formatWeight(format.grams, locale)}`
+                    }
+                    caption={formatWeight(format.grams, locale)}
+                    tone="paper"
+                    sizes="(max-width: 640px) 55vw, 260px"
+                    className="relative h-full w-44"
+                  />
                 </div>
+                <p className="font-display text-ink mt-6 text-2xl tracking-[0.06em]">
+                  {formatWeight(format.grams, locale)}
+                </p>
+                <p className="text-ink-soft mx-auto mt-2 max-w-[38ch] text-base leading-relaxed">
+                  {translate(format.description, locale)}
+                </p>
+                {format.valve && (
+                  <p className="label text-gold-deep mt-3">{dictionary.portfolio.valve}</p>
+                )}
               </Reveal>
             ))}
           </div>

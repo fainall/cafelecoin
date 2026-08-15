@@ -4,6 +4,7 @@ import type { Contact, Estate } from "@/content/schema";
 import { instagramUrl } from "@/content/helpers";
 import type { Dictionary } from "@/i18n";
 import type { Locale } from "@/i18n/config";
+import { ContourScene } from "@/components/ui/scenes";
 import { Wordmark } from "@/components/ui/wordmark";
 import { LocaleSwitcher } from "./locale-switcher";
 
@@ -18,69 +19,69 @@ export function SiteFooter({ locale, dictionary, contact, estate }: SiteFooterPr
   const year = new Date().getFullYear();
 
   return (
-    <footer className="bg-ink border-ink-line border-t">
-      <div className="mx-auto w-full max-w-[100rem] px-6 py-16 sm:px-10 lg:px-16 lg:py-20">
-        <div className="grid gap-12 lg:grid-cols-12">
-          <div className="lg:col-span-4">
-            <Link
-              href={`/${locale}`}
-              className="text-bone hover:text-cherry-bright inline-block transition-colors"
-              aria-label={contact.brand}
-            >
-              <Wordmark className="h-12 w-auto" />
-            </Link>
-            <p className="font-display text-bone-muted mt-6 max-w-[30ch] text-lg">
-              {dictionary.footer.claim}
-            </p>
-          </div>
+    <footer className="bg-forest-deep relative overflow-hidden">
+      {/* Plano de origen: curvas de nivel de la zona cafetera */}
+      <div className="absolute inset-0 opacity-[0.10]" aria-hidden="true">
+        <ContourScene />
+      </div>
 
-          <div className="lg:col-span-3">
-            <p className="meta text-bone-muted">{dictionary.contact.origin}</p>
-            <p className="text-bone mt-3 text-[0.98rem]">
-              {estate.city}, {estate.department}
-              <br />
-              {estate.country}
-            </p>
-          </div>
+      <div className="relative mx-auto w-full max-w-[82rem] px-6 py-20 text-center sm:px-10">
+        <span className="bg-gold mx-auto block h-1.5 w-1.5 rotate-45" aria-hidden="true" />
+        <span
+          className="via-gold/40 mx-auto mt-4 block h-14 w-px bg-gradient-to-b from-transparent to-transparent"
+          aria-hidden="true"
+        />
 
-          <div className="lg:col-span-3">
-            <p className="meta text-bone-muted">{dictionary.contact.whatsapp}</p>
-            <ul className="mt-3 space-y-1.5">
-              {contact.phones.map((phone) => (
-                <li key={phone.id}>
-                  <a
-                    href={`tel:+${phone.e164}`}
-                    className="text-bone hover:text-cherry-bright text-[0.98rem] transition-colors"
-                  >
-                    {phone.display}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
+        <p className="label text-cream-dim mt-6">
+          {estate.city} · {estate.department} · {estate.country}
+        </p>
 
-          <div className="lg:col-span-2">
-            <p className="meta text-bone-muted">{dictionary.contact.email}</p>
+        <Link
+          href={`/${locale}`}
+          className="text-cream hover:text-gold-light mx-auto mt-10 block w-fit transition-colors"
+          aria-label={contact.brand}
+        >
+          <Wordmark className="mx-auto h-16 w-auto" />
+        </Link>
+
+        <p className="font-display text-cream-dim mt-8 text-lg tracking-[0.04em]">
+          {dictionary.footer.claim}
+        </p>
+
+        <ul className="mt-10 flex flex-wrap items-center justify-center gap-x-10 gap-y-3">
+          {contact.phones.map((phone) => (
+            <li key={phone.id}>
+              <a
+                href={`tel:+${phone.e164}`}
+                className="label text-cream-faint hover:text-gold-light transition-colors"
+              >
+                {phone.display}
+              </a>
+            </li>
+          ))}
+          <li>
             <a
               href={`mailto:${contact.email}`}
-              className="text-bone hover:text-cherry-bright mt-3 block text-[0.98rem] transition-colors"
+              className="label text-cream-faint hover:text-gold-light transition-colors"
             >
               {contact.email}
             </a>
+          </li>
+          <li>
             <a
               href={instagramUrl(contact)}
               target="_blank"
               rel="noopener"
-              className="text-bone hover:text-cherry-bright mt-3 block text-[0.98rem] transition-colors"
+              className="label text-cream-faint hover:text-gold-light transition-colors"
             >
               @{contact.instagram}
             </a>
-          </div>
-        </div>
+          </li>
+        </ul>
 
-        <div className="border-ink-line mt-16 flex flex-col gap-4 border-t pt-6 sm:flex-row sm:items-center sm:justify-between">
-          <p className="meta text-bone-muted">
-            © {year} {contact.legalName} · {dictionary.footer.rights}
+        <div className="border-forest-line/60 mt-12 flex flex-col items-center gap-4 border-t pt-8 sm:flex-row sm:justify-between">
+          <p className="label text-cream-faint">
+            © {year} {contact.legalName}. {dictionary.footer.rights}
           </p>
           <LocaleSwitcher current={locale} />
         </div>

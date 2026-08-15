@@ -26,18 +26,18 @@ export function LocaleSwitcher({ current, className = "" }: LocaleSwitcherProps)
 
   return (
     <div
-      className={`meta flex items-center gap-1.5 ${className}`}
+      className={`label flex items-center gap-1.5 ${className}`}
     >
       {locales.map((locale, index) => (
         <span key={locale} className="flex items-center gap-1">
-          {index > 0 && <span className="text-bone-muted">/</span>}
+          {index > 0 && <span className="text-cream-faint">/</span>}
           <Link
             href={buildHref(locale)}
             aria-current={locale === current ? "true" : undefined}
             className={
               locale === current
-                ? "text-cherry-bright uppercase"
-                : "text-bone-muted hover:text-bone uppercase transition-colors"
+                ? "text-gold-light uppercase"
+                : "text-cream-faint hover:text-cream uppercase transition-colors"
             }
           >
             {locale}

@@ -8,66 +8,57 @@ interface SectionProps {
   tone?: Tone;
   children: ReactNode;
   className?: string;
-  /** Sin relleno vertical: para bandas fotográficas a sangre. */
-  flush?: boolean;
+  /** Ancho de lectura reducido para bloques centrados. */
+  narrow?: boolean;
 }
 
-/** Contenedor con la retícula y los márgenes del sitio. */
 export function Section({
   id,
   tone = "dark",
   children,
   className = "",
-  flush = false,
+  narrow = false,
 }: SectionProps) {
   return (
     <section
       id={id}
-      className={`relative scroll-mt-20 ${surfaces[tone].bg} ${flush ? "" : "py-28 sm:py-36 lg:py-44"} ${className}`}
+      className={`relative scroll-mt-24 py-24 sm:py-32 lg:py-40 ${surfaces[tone].bg} ${className}`}
     >
-      <div className="mx-auto w-full max-w-[100rem] px-6 sm:px-10 lg:px-16">{children}</div>
+      <div
+        className={`mx-auto w-full px-6 sm:px-10 lg:px-16 ${narrow ? "max-w-3xl" : "max-w-[82rem]"}`}
+      >
+        {children}
+      </div>
     </section>
   );
 }
 
-interface SectionHeadProps {
-  /** Número de orden dentro del recorrido: 01, 02, 03… */
-  index: string;
-  label: string;
+interface SectionHeadingProps {
+  /** Palabra pequeña sobre el título: "Nuestro", "Lo que". */
+  eyebrow: string;
   title: string;
-  lede?: string;
   tone?: Tone;
   className?: string;
 }
 
 /**
- * Cabecera de sección alineada a la izquierda sobre la retícula:
- * índice y etiqueta en la columna angosta, título y entradilla en la ancha.
+ * Encabezado ceremonial: antetítulo pequeño, título romano y filete central.
+ * Siempre centrado.
  */
-export function SectionHead({
-  index,
-  label,
+export function SectionHeading({
+  eyebrow,
   title,
-  lede,
   tone = "dark",
   className = "",
-}: SectionHeadProps) {
+}: SectionHeadingProps) {
   const s = surfaces[tone];
 
   return (
-    <Reveal as="header" className={`grid gap-8 lg:grid-cols-12 lg:gap-12 ${className}`}>
-      <div className="lg:col-span-3">
-        <div className={`flex items-baseline gap-4 border-t pt-4 ${s.line}`}>
-          <span className={`index ${tone === "dark" ? "text-cherry-bright" : "text-cherry"}`}>
-            {index}
-          </span>
-          <span className={`meta ${s.muted}`}>{label}</span>
-        </div>
-      </div>
-
-      <div className="lg:col-span-9">
-        <h2 className={`display text-[clamp(2.5rem,6vw,5rem)] ${s.text}`}>{title}</h2>
-        {lede && <p className={`prose-editorial mt-8 ${s.muted}`}>{lede}</p>}
+    <Reveal as="header" className={`text-center ${className}`}>
+      <p className={`eyebrow ${s.accent}`}>{eyebrow}</p>
+      <h2 className={`display-xl mt-5 text-[clamp(2rem,4.6vw,3.6rem)] ${s.heading}`}>{title}</h2>
+      <div className={`flourish mt-7 ${s.accent}`}>
+        <span className="block h-1.5 w-1.5 rotate-45 bg-current" />
       </div>
     </Reveal>
   );

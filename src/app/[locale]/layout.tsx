@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Archivo, Newsreader } from "next/font/google";
+import { Archivo, Cinzel, Cormorant_Garamond } from "next/font/google";
 import { notFound } from "next/navigation";
 
 import "../globals.css";
@@ -13,11 +13,19 @@ import { getDictionary } from "@/i18n";
 import { isLocale, locales, localeTags, type Locale } from "@/i18n/config";
 import { organizationJsonLd } from "@/lib/seo";
 
-/** Serif editorial con tamaño óptico: titulares y textos de lectura. */
-const newsreader = Newsreader({
+/** Romana grabada para titulares y logotipo. */
+const cinzel = Cinzel({
   subsets: ["latin"],
+  variable: "--font-cinzel",
+  display: "swap",
+});
+
+/** Serif de lectura, de trazo fino. */
+const cormorant = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
   style: ["normal", "italic"],
-  variable: "--font-newsreader",
+  variable: "--font-cormorant",
   display: "swap",
 });
 
@@ -98,9 +106,10 @@ export default async function LocaleLayout({
   return (
     <html
       lang={localeTags[locale]}
-      className={`${newsreader.variable} ${archivo.variable}`}
+      className={`${cinzel.variable} ${cormorant.variable} ${archivo.variable}`}
     >
-      <body className="bg-ink text-bone antialiased">
+      <body className="bg-forest text-cream antialiased">
+        <div className="grain" aria-hidden="true" />
 
         <SiteHeader
           locale={locale}
