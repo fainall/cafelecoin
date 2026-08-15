@@ -1,7 +1,7 @@
 import type { ExportInfo } from "@/content/schema";
 import type { Dictionary } from "@/i18n";
 import { translate, type Locale } from "@/i18n/config";
-import { RidgeEdge } from "@/components/ui/divider";
+import { TornEdge } from "@/components/ui/divider";
 import { Reveal } from "@/components/ui/reveal";
 import { Section, SectionHeading } from "@/components/ui/section";
 
@@ -14,7 +14,7 @@ interface ExportSectionProps {
 export function ExportSection({ exportInfo, dictionary, locale }: ExportSectionProps) {
   return (
     <>
-      <RidgeEdge fill="fill-forest" behind="bg-paper" />
+      <TornEdge fill="fill-forest" behind="bg-paper" />
       <Section id="exportacion" tone="dark" className="pt-6 sm:pt-10 lg:pt-12">
         <SectionHeading
           eyebrow={dictionary.sections.export.eyebrow}

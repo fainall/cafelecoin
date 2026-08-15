@@ -33,8 +33,12 @@ export function TornEdge({
 }
 
 /**
- * Silueta de cordillera con dos planos: la cresta lejana en menor opacidad da
- * la sensación de bruma entre montañas.
+ * Silueta de cordillera.
+ *
+ * Una sola cresta, con laderas curvas y cimas de altura y separación
+ * irregulares: un perfil de sierra regular delata el recurso gráfico. Se
+ * conserva la proporción del dibujo (`xMidYMax meet` no sirve a ancho completo,
+ * así que el trazado ya viene diseñado para estirarse sin acartonarse).
  */
 export function RidgeEdge({
   fill = "fill-forest",
@@ -47,15 +51,34 @@ export function RidgeEdge({
       aria-hidden="true"
     >
       <svg
-        viewBox="0 0 1440 220"
+        viewBox="0 0 1440 300"
         preserveAspectRatio="none"
-        className={`block h-24 w-full sm:h-32 lg:h-40 ${fill}`}
+        className={`block h-28 w-full sm:h-40 lg:h-52 ${fill}`}
       >
+        {/* Cimas en arista y faldas curvas: el perfil solo redondeado parece
+            una loma; el solo anguloso, una sierra de plantilla. */}
         <path
-          d="M0 220 L0 150 L104 118 L182 146 L268 96 L352 132 L446 78 L534 120 L618 92 L706 134 L790 104 L876 146 L962 110 L1048 150 L1132 116 L1218 150 L1300 122 L1372 152 L1440 128 L1440 220 Z"
-          opacity="0.45"
+          d="M0 300 L0 214
+             C 58 210, 98 196, 142 182
+             L 236 92
+             C 254 78, 272 78, 290 92
+             L 358 170
+             C 390 198, 416 202, 448 192
+             L 528 128
+             C 552 110, 574 112, 596 132
+             L 664 194
+             C 694 212, 722 210, 750 196
+             L 858 96
+             C 878 82, 898 82, 916 98
+             L 992 178
+             C 1020 200, 1048 202, 1078 190
+             L 1158 136
+             C 1182 120, 1204 122, 1224 142
+             L 1304 204
+             C 1338 218, 1378 210, 1406 196
+             L 1440 182
+             L 1440 300 Z"
         />
-        <path d="M0 220 L0 186 L92 162 L176 188 L264 146 L346 180 L432 138 L522 176 L608 150 L694 184 L780 156 L868 190 L954 162 L1040 194 L1126 166 L1212 196 L1298 172 L1376 198 L1440 176 L1440 220 Z" />
       </svg>
     </div>
   );

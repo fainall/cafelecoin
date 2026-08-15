@@ -15,7 +15,7 @@ pnpm imagenes
 | `producto-250g.webp`         | Foto de empaque, sin fondo   | Portada, portafolio, ficha de lote |
 | `producto-250g-reverso.webp` | Etiqueta trasera, sin fondo  | Ficha del origen                   |
 | `producto-2500g.webp`        | Bolsas HoReCa, sin fondo     | Portafolio (protagonista)          |
-| `ambiente-taza.webp/jpg`     | Pieza de campaña recortada   | Sección "Nuestro Café"             |
+| `ambiente-taza.jpg`          | Pieza de campaña recortada   | Disponible, sin usar               |
 | `ambiente-cocina.jpg`        | Pieza de campaña recortada   | Disponible, sin usar               |
 | `ambiente-barra.jpg`         | Pieza de campaña recortada   | Disponible, sin usar               |
 | `og-cover.jpg`               | Derivada de `ambiente-barra` | Vista previa en WhatsApp y redes   |

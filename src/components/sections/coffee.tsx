@@ -4,9 +4,7 @@ import type { Dictionary } from "@/i18n";
 import { LinkButton } from "@/components/ui/button";
 import { TornEdge } from "@/components/ui/divider";
 import { featureIcons } from "@/components/ui/feature-icons";
-import { Photo } from "@/components/ui/photo";
 import { Reveal } from "@/components/ui/reveal";
-import { LeafScene } from "@/components/ui/scenes";
 import { Section, SectionHeading } from "@/components/ui/section";
 
 interface CoffeeProps {
@@ -50,29 +48,7 @@ export function Coffee({ estate, highlights, dictionary, locale }: CoffeeProps) 
           </Reveal>
         </div>
 
-        <Reveal delay={80} className="mt-20 lg:mt-24">
-          <figure>
-            <Photo
-              src="/img/ambiente-taza.jpg"
-              alt={
-                locale === "en"
-                  ? "Le Coin 250 g bag next to a freshly served cup of coffee"
-                  : "Bolsa de 250 g de Le Coin junto a una taza de café recién servida"
-              }
-              className="aspect-[4/3] w-full sm:aspect-[16/9] lg:aspect-[2/1]"
-              sizes="(max-width: 1024px) 100vw, 82rem"
-              focus="center 12%"
-              fallback={<LeafScene />}
-            />
-            <figcaption className="label text-ink-soft mt-4 text-center">
-              {locale === "en"
-                ? "Retail format · 250 g · 100% arabica coffee"
-                : "Formato retail · 250 g · 100% café arábico"}
-            </figcaption>
-          </figure>
-        </Reveal>
-
-        <ul className="mx-auto mt-20 grid max-w-5xl gap-14 sm:grid-cols-3 lg:mt-24">
+        <ul className="mx-auto mt-24 grid max-w-5xl gap-14 sm:grid-cols-3 lg:mt-28">
           {highlights.map((highlight, index) => {
             const Icon = featureIcons[highlight.icon];
             return (

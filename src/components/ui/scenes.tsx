@@ -58,44 +58,6 @@ export function MountainScene({ className = "" }: { className?: string }) {
   );
 }
 
-export function BeanScene({ className = "" }: { className?: string }) {
-  return (
-    <svg
-      className={`h-full w-full ${className}`}
-      viewBox="0 0 600 600"
-      preserveAspectRatio="xMidYMid slice"
-      aria-hidden="true"
-    >
-      <defs>
-        <radialGradient id="beanBg" cx="50%" cy="40%" r="70%">
-          <stop offset="0%" stopColor="#26301f" />
-          <stop offset="100%" stopColor="#0d110a" />
-        </radialGradient>
-      </defs>
-      <rect width="600" height="600" fill="url(#beanBg)" />
-    </svg>
-  );
-}
-
-export function LeafScene({ className = "" }: { className?: string }) {
-  return (
-    <svg
-      className={`h-full w-full ${className}`}
-      viewBox="0 0 600 800"
-      preserveAspectRatio="xMidYMid slice"
-      aria-hidden="true"
-    >
-      <defs>
-        <linearGradient id="leafBg" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#1e2a1a" />
-          <stop offset="100%" stopColor="#0d110a" />
-        </linearGradient>
-      </defs>
-      <rect width="600" height="800" fill="url(#leafBg)" />
-    </svg>
-  );
-}
-
 /** Curvas de nivel: fondo de plano cartográfico para el pie de página. */
 export function ContourScene({ className = "" }: { className?: string }) {
   return (
