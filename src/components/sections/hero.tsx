@@ -58,6 +58,22 @@ export function Hero({ estate, hero, dictionary, locale }: HeroProps) {
         )}
       </ParallaxLayer>
 
+      {/* Nubes a la deriva sobre el cielo de la fotografía. La máscara las
+          disuelve antes de llegar a la cordillera, para que no se vea el corte
+          de la capa. */}
+      <div
+        className="animate-nubes pointer-events-none absolute inset-x-[-10%] top-0 h-[58%] [mask-image:linear-gradient(to_bottom,black_0%,black_45%,transparent_100%)] opacity-40 mix-blend-screen"
+        aria-hidden="true"
+      >
+        <Photo
+          src="/img/cielo.webp"
+          alt=""
+          sizes="120vw"
+          className="h-full w-full"
+          fallback={<span />}
+        />
+      </div>
+
       <div
         // Oscurece arriba para el titular y abajo para la cinta, dejando
         // respirar la franja central donde entra la luz del amanecer.

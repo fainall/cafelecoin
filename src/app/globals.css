@@ -35,6 +35,8 @@
 
   --animate-ticker: ticker 46s linear infinite;
   --animate-float: float 9s ease-in-out infinite;
+  /* Deriva de nubes: ida y vuelta muy lenta, sin corte ni repetición visible. */
+  --animate-nubes: nubes 110s ease-in-out infinite alternate;
 }
 
 @keyframes ticker {
@@ -43,6 +45,15 @@
   }
   to {
     transform: translateX(-50%);
+  }
+}
+
+@keyframes nubes {
+  from {
+    transform: translate3d(0, 0, 0) scale(1.04);
+  }
+  to {
+    transform: translate3d(-7%, -1.5%, 0) scale(1.04);
   }
 }
 

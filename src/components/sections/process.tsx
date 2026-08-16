@@ -1,7 +1,6 @@
 import type { Estate } from "@/content/schema";
 import type { Dictionary } from "@/i18n";
 import { translate, type Locale } from "@/i18n/config";
-import { LandscapeBackdrop } from "@/components/ui/landscape-backdrop";
 import { Reveal } from "@/components/ui/reveal";
 import { Section, SectionHeading } from "@/components/ui/section";
 
@@ -23,16 +22,7 @@ interface ProcessProps {
  */
 export function Process({ estate, dictionary, locale }: ProcessProps) {
   return (
-    <Section
-      id="proceso"
-      tone="paper"
-      className="bg-paper-soft"
-      // El mismo paisaje que la sección anterior, algo más presente: aquí el
-      // texto es corto y admite más imagen detrás.
-      backdrop={
-        <LandscapeBackdrop veil="linear-gradient(to bottom, rgba(234,229,218,0.92) 0%, rgba(234,229,218,0.72) 38%, rgba(234,229,218,0.66) 66%, rgba(234,229,218,0.88) 100%)" />
-      }
-    >
+    <Section id="proceso" tone="paper" className="bg-paper-soft">
       <SectionHeading
         eyebrow={dictionary.sections.process.eyebrow}
         title={dictionary.sections.process.title}
