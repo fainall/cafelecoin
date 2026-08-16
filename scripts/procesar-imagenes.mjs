@@ -24,9 +24,11 @@ const OUT = path.join("public", "img");
 /** Fotografías de fondo: solo se redimensionan y comprimen. */
 const fondos = [
   { src: "finca-original.jpeg", out: "finca.webp", width: 2400, quality: 76 },
-  // Cielo de la escena por capas; las tres capas de terreno las recorta
-  // scripts/separar-capas.mjs.
+  // Nubes de la portada.
   { src: "capa-1-cielo.jpeg", out: "cielo.webp", width: 2400, quality: 74 },
+  // Fondo de la banda de paisaje; el plano cercano lo recorta
+  // scripts/separar-capas.mjs.
+  { src: "capa-3-cerros.jpeg", out: "cerros.webp", width: 2400, quality: 76 },
 ];
 
 /**

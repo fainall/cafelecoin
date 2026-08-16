@@ -2,25 +2,23 @@ import { ParallaxFrame } from "./parallax";
 import { Photo } from "./photo";
 
 /**
- * Paisaje de origen en cuatro planos, como fondo de una sección.
+ * Paisaje de origen en dos planos.
  *
- * Cada capa es una fotografía recortada contra el cielo
- * (scripts/separar-capas.mjs) y se desplaza a distinta velocidad y con distinta
- * deriva lateral: el cielo casi quieto, la ladera de cafetos adelantándose. Al
- * bajar, la sección se recorre en vez de mirarse.
+ * Al fondo, los cerros de cafetales completos; delante, la ladera en fruto
+ * recortada por luminosidad (scripts/separar-capas.mjs). Cada plano se desplaza
+ * a distinta velocidad y con distinta deriva lateral, de modo que al bajar el
+ * paisaje se recorre en vez de mirarse.
  *
- * Va detrás del contenido y bajo un velo del color de la superficie, así que el
- * texto conserva su contraste; el paisaje queda como atmósfera, no como imagen
- * protagonista.
+ * Fueron cuatro planos y se veía mal: recortar crestas lejanas en un paisaje
+ * con bruma dibujaba una línea ondulada con halo, porque ahí no hay borde que
+ * cortar. Solo se recorta lo que tiene contraste real: la vegetación cercana.
  */
 
 const planos = [
-  // Fondo: se queda muy atrás.
-  { src: "/img/cielo.webp", range: 150, drift: -20, z: "z-0" },
-  { src: "/img/cerro-lejano.webp", range: 105, drift: -55, z: "z-[1]" },
-  { src: "/img/cerro-medio.webp", range: 45, drift: -120, z: "z-[2]" },
+  // Fondo: se queda atrás.
+  { src: "/img/cerros.webp", range: 95, drift: -45, z: "z-0" },
   // Primer plano: se adelanta a la página.
-  { src: "/img/cerro-cercano.webp", range: -70, drift: -210, z: "z-[3]" },
+  { src: "/img/cafetal-frente.webp", range: -65, drift: -180, z: "z-[1]" },
 ];
 
 interface LandscapeBackdropProps {
