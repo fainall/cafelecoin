@@ -4,6 +4,7 @@ import { formatsByLine, formatWeight, lotPath } from "@/content/helpers";
 import type { Format, Lot } from "@/content/schema";
 import type { Dictionary } from "@/i18n";
 import { translate, type Locale } from "@/i18n/config";
+import { formatMoney } from "@/lib/cart/money";
 import { FloatingBeans } from "@/components/ui/beans";
 import { LinkButton } from "@/components/ui/button";
 import { ProductShot } from "@/components/ui/product-shot";
@@ -62,6 +63,13 @@ export function Products({ formats, lots, dictionary, locale }: ProductsProps) {
                         <span className="text-cream-dim flex-1 text-base leading-relaxed">
                           {translate(format.description, locale)}
                         </span>
+
+                        {format.retailPrice && (
+                          <span className="font-display text-cream text-lg tracking-[0.06em]">
+                            {formatMoney(format.retailPrice, locale)}
+                          </span>
+                        )}
+
                         {format.valve && (
                           <span className="label text-gold w-full sm:w-auto">
                             {dictionary.portfolio.valve}

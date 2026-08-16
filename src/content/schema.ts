@@ -59,6 +59,32 @@ export type Estate = z.output<typeof EstateSchema>;
 export const ProductLineSchema = z.enum(["retail", "horeca"]);
 export type ProductLine = z.output<typeof ProductLineSchema>;
 
+/* ─────────────────────────────── Precios ─────────────────────────────── */
+
+export const CurrencySchema = z.enum(["CLP", "COP", "USD"]);
+export type Currency = z.output<typeof CurrencySchema>;
+
+/**
+ * Importe en la unidad mínima que factura la moneda.
+ * El peso chileno y el colombiano no usan decimales, así que `amount` es el
+ * monto entero; nunca se guardan precios como número con coma.
+ */
+export const MoneySchema = z.object({
+  amount: z.number().int().nonnegative(),
+  currency: CurrencySchema,
+});
+export type Money = z.output<typeof MoneySchema>;
+
+/** Escalón de precio mayorista: desde N unidades, cada una vale esto. */
+export const PriceTierSchema = z.object({
+  minQuantity: z.number().int().positive(),
+  unit: MoneySchema,
+});
+export type PriceTier = z.output<typeof PriceTierSchema>;
+
+export const StockSchema = z.enum(["disponible", "agotado", "bajo-pedido"]);
+export type Stock = z.output<typeof StockSchema>;
+
 export const FormatSchema = z.object({
   id: z.string().min(1),
   sku: z.string().min(1).optional(),
@@ -72,6 +98,15 @@ export const FormatSchema = z.object({
   tags: z.array(LocalizedStringSchema).default([]),
   /** Fotografía del empaque recortada sin fondo. */
   image: ImageSchema.optional(),
+
+  /** Precio al público. Sin él, el formato no se puede comprar en línea. */
+  retailPrice: MoneySchema.optional(),
+  /**
+   * Precio mayorista por escalones. Se aplica el escalón de mayor
+   * `minQuantity` que la cantidad pedida alcance.
+   */
+  wholesaleTiers: z.array(PriceTierSchema).default([]),
+  stock: StockSchema.default("disponible"),
 });
 export type Format = z.output<typeof FormatSchema>;
 

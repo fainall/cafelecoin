@@ -24,6 +24,12 @@ export const formats: z.input<typeof FormatSchema>[] = [
       { es: "Grano / molido", en: "Whole bean / ground" },
       { es: "Café de Colombia", en: "Café de Colombia" },
     ],
+    // EDITAR: confirmar precios. Los tomé de tus piezas de campaña.
+    retailPrice: { amount: 10990, currency: "CLP" },
+    wholesaleTiers: [
+      { minQuantity: 12, unit: { amount: 9500, currency: "CLP" } },
+      { minQuantity: 48, unit: { amount: 8700, currency: "CLP" } },
+    ],
     image: {
       src: "/img/producto-250g.webp",
       alt: {
@@ -45,6 +51,11 @@ export const formats: z.input<typeof FormatSchema>[] = [
       { es: "HoReCa", en: "HoReCa" },
       { es: "Café & Bistro", en: "Café & Bistro" },
       { es: "100% colombiano", en: "100% Colombian" },
+    ],
+    retailPrice: { amount: 80000, currency: "CLP" },
+    wholesaleTiers: [
+      { minQuantity: 4, unit: { amount: 74000, currency: "CLP" } },
+      { minQuantity: 10, unit: { amount: 69000, currency: "CLP" } },
     ],
     image: {
       src: "/img/producto-2500g.webp",
