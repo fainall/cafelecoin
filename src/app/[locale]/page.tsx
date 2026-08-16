@@ -5,7 +5,6 @@ import { Coffee } from "@/components/sections/coffee";
 import { Contact } from "@/components/sections/contact";
 import { ExportSection } from "@/components/sections/export-section";
 import { Hero } from "@/components/sections/hero";
-import { OriginBand } from "@/components/sections/origin-band";
 import { OriginProfile } from "@/components/sections/origin-profile";
 import { Process } from "@/components/sections/process";
 import { Products } from "@/components/sections/products";
@@ -44,7 +43,6 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <Coffee estate={estate} highlights={highlights} dictionary={dictionary} locale={locale} />
       <Process estate={estate} dictionary={dictionary} locale={locale} />
       <Products formats={formats} lots={lots} dictionary={dictionary} locale={locale} />
-      <OriginBand estate={estate} lot={featured} dictionary={dictionary} locale={locale} />
       <OriginProfile lot={featured} estate={estate} dictionary={dictionary} locale={locale} />
       <Band dictionary={dictionary} />
       <Testimonials

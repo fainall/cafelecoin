@@ -10,6 +10,13 @@ interface SectionProps {
   className?: string;
   /** Ancho de lectura reducido para bloques centrados. */
   narrow?: boolean;
+  /**
+   * Fondo que ocupa toda la sección, por detrás del contenido.
+   * Va como hermano del contenedor y no dentro de él: un hermano posicionado
+   * pinta por encima de los bloques estáticos, así que el contenido necesita
+   * su propio nivel para no quedar tapado.
+   */
+  backdrop?: ReactNode;
 }
 
 export function Section({
@@ -18,14 +25,17 @@ export function Section({
   children,
   className = "",
   narrow = false,
+  backdrop,
 }: SectionProps) {
   return (
     <section
       id={id}
-      className={`relative scroll-mt-24 py-24 sm:py-32 lg:py-40 ${surfaces[tone].bg} ${className}`}
+      className={`relative scroll-mt-24 py-24 sm:py-32 lg:py-40 ${surfaces[tone].bg} ${backdrop ? "overflow-hidden" : ""} ${className}`}
     >
+      {backdrop}
+
       <div
-        className={`mx-auto w-full px-6 sm:px-10 lg:px-16 ${narrow ? "max-w-3xl" : "max-w-[82rem]"}`}
+        className={`mx-auto w-full px-6 sm:px-10 lg:px-16 ${backdrop ? "relative z-10" : ""} ${narrow ? "max-w-3xl" : "max-w-[82rem]"}`}
       >
         {children}
       </div>

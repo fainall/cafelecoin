@@ -1,7 +1,7 @@
 import type { Estate } from "@/content/schema";
 import type { Dictionary } from "@/i18n";
 import { translate, type Locale } from "@/i18n/config";
-import { Photo } from "@/components/ui/photo";
+import { LandscapeBackdrop } from "@/components/ui/landscape-backdrop";
 import { Reveal } from "@/components/ui/reveal";
 import { Section, SectionHeading } from "@/components/ui/section";
 
@@ -23,7 +23,16 @@ interface ProcessProps {
  */
 export function Process({ estate, dictionary, locale }: ProcessProps) {
   return (
-    <Section id="proceso" tone="paper" className="bg-paper-soft">
+    <Section
+      id="proceso"
+      tone="paper"
+      className="bg-paper-soft"
+      // El mismo paisaje que la sección anterior, algo más presente: aquí el
+      // texto es corto y admite más imagen detrás.
+      backdrop={
+        <LandscapeBackdrop veil="linear-gradient(to bottom, rgba(234,229,218,0.92) 0%, rgba(234,229,218,0.72) 38%, rgba(234,229,218,0.66) 66%, rgba(234,229,218,0.88) 100%)" />
+      }
+    >
       <SectionHeading
         eyebrow={dictionary.sections.process.eyebrow}
         title={dictionary.sections.process.title}
@@ -32,25 +41,6 @@ export function Process({ estate, dictionary, locale }: ProcessProps) {
 
       <Reveal className="mx-auto mt-10 max-w-2xl text-center">
         <p className="text-ink-soft leading-relaxed">{dictionary.process.intro}</p>
-      </Reveal>
-
-      <Reveal delay={80} className="mx-auto mt-12 max-w-4xl lg:mt-14">
-        <figure>
-          <Photo
-            src="/img/botanica.webp"
-            alt={
-              locale === "en"
-                ? "Watercolour from the Le Coin packaging: coffee branch with ripe cherries, leaves and beans"
-                : "Acuarela del empaque de Le Coin: rama de café con cerezas maduras, hojas y granos"
-            }
-            className="aspect-[5/2] w-full sm:aspect-[3/1]"
-            sizes="(max-width: 1024px) 100vw, 56rem"
-            fallback={<div className="bg-paper h-full w-full" />}
-          />
-          <figcaption className="label text-ink-soft mt-3 text-center">
-            {estate.city}, {estate.department} · {estate.country}
-          </figcaption>
-        </figure>
       </Reveal>
 
       {/* Mismo ancho que la banda para que los bordes izquierdos alineen.

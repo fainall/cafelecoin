@@ -4,6 +4,7 @@ import type { Dictionary } from "@/i18n";
 import { LinkButton } from "@/components/ui/button";
 import { TornEdge } from "@/components/ui/divider";
 import { featureIcons } from "@/components/ui/feature-icons";
+import { LandscapeBackdrop } from "@/components/ui/landscape-backdrop";
 import { Reveal } from "@/components/ui/reveal";
 import { Section, SectionHeading } from "@/components/ui/section";
 
@@ -21,7 +22,16 @@ export function Coffee({ estate, highlights, dictionary, locale }: CoffeeProps) 
   return (
     <>
       <TornEdge fill="fill-paper" behind="bg-forest" />
-      <Section id="historia" tone="paper" className="pt-16 sm:pt-20 lg:pt-24">
+      <Section
+        id="historia"
+        tone="paper"
+        className="pt-16 sm:pt-20 lg:pt-24"
+        // Los cerros se mueven detrás del relato; el velo de papel mantiene el
+        // contraste del texto.
+        backdrop={
+          <LandscapeBackdrop veil="linear-gradient(to bottom, rgba(244,241,233,0.94) 0%, rgba(244,241,233,0.78) 34%, rgba(244,241,233,0.7) 62%, rgba(244,241,233,0.9) 100%)" />
+        }
+      >
         <SectionHeading
           eyebrow={dictionary.sections.story.eyebrow}
           title={dictionary.sections.story.title}
