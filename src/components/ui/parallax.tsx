@@ -100,8 +100,10 @@ export function ParallaxLayer({
 }
 
 interface ParallaxFrameProps {
-  /** Recorrido total del contenido dentro del marco, en píxeles. */
+  /** Recorrido vertical del contenido dentro del marco, en píxeles. */
   range?: number;
+  /** Deriva horizontal, en píxeles. Da la sensación de recorrer el paisaje. */
+  drift?: number;
   className?: string;
   children: ReactNode;
 }
@@ -114,7 +116,12 @@ interface ParallaxFrameProps {
  * propio marco: 0 cuando entra por abajo, 1 cuando sale por arriba. El
  * contenido es más alto que el marco, así que nunca asoman los bordes.
  */
-export function ParallaxFrame({ range = 140, className = "", children }: ParallaxFrameProps) {
+export function ParallaxFrame({
+  range = 140,
+  drift = 0,
+  className = "",
+  children,
+}: ParallaxFrameProps) {
   const marco = useRef<HTMLDivElement>(null);
   const movil = useRef<HTMLDivElement>(null);
 
@@ -132,19 +139,27 @@ export function ParallaxFrame({ range = 140, className = "", children }: Paralla
       // Fuera de pantalla no se calcula nada.
       if (rect.bottom < -120 || rect.top > alto + 120) return;
 
+      // El recorrido se acota a la holgura real del marco: en pantallas
+      // angostas un valor fijo en píxeles dejaría ver el borde.
+      const techoY = rect.height * 0.15;
+      const techoX = rect.width * 0.15;
+      const recorrido = Math.sign(range) * Math.min(Math.abs(range), techoY);
+      const lateral = Math.sign(drift) * Math.min(Math.abs(drift), techoX);
+
       const avance = (alto - rect.top) / (alto + rect.height);
-      const y = (avance - 0.5) * range;
-      interior.style.transform = `translate3d(0, ${y.toFixed(2)}px, 0)`;
+      const y = (avance - 0.5) * recorrido;
+      const x = (avance - 0.5) * lateral;
+      interior.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0)`;
     });
-  }, [range]);
+  }, [range, drift]);
 
   return (
     <div ref={marco} className={`relative overflow-hidden ${className}`}>
-      {/* 18% de holgura arriba y abajo: más que el recorrido máximo del
+      {/* Holgura en las cuatro direcciones: mayor que el recorrido máximo del
           contenido, para que nunca asome el borde del marco. */}
       <div
         ref={movil}
-        className="absolute inset-x-0 -top-[18%] h-[136%]"
+        className="absolute -inset-x-[18%] -top-[20%] h-[140%]"
         style={{ willChange: "transform" }}
       >
         {children}

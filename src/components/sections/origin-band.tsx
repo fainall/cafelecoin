@@ -15,43 +15,64 @@ interface OriginBandProps {
 }
 
 /**
- * Banda de origen a sangre: los cerros del eje cafetero desplazándose dentro
- * del marco mientras la página avanza, con el nombre del origen encima.
+ * Paisaje del origen en cuatro planos.
  *
- * La ciudad y el departamento salen de la capa de contenido, así que corregir
- * el origen es editar src/content/data/estate.ts y nada más.
+ * Cada capa es una fotografía recortada contra el cielo
+ * (scripts/separar-capas.mjs) y se desplaza a distinta velocidad y con distinta
+ * deriva lateral: el cielo casi quieto, la ladera de cafetos adelantándose. El
+ * resultado es que al bajar se recorre el paisaje en vez de mirarlo.
+ *
+ * Las capas se apilan de fondo a frente; si un archivo falta, la escena sigue
+ * en pie con las demás.
  */
-export function OriginBand({ estate, lot, dictionary, locale }: OriginBandProps) {
-  return (
-    <section className="relative">
-      <ParallaxFrame range={140} className="h-[58svh] max-h-[560px] min-h-[340px]">
-        {estate.image ? (
-          <Photo
-            src={estate.image.src}
-            alt={translate(estate.image.alt, locale)}
-            focus={estate.image.focus}
-            sizes="100vw"
-            className="h-full w-full"
-            fallback={<MountainScene />}
-          />
-        ) : (
-          <MountainScene />
-        )}
-      </ParallaxFrame>
+const planos = [
+  // Fondo: se queda muy atrás.
+  { src: "/img/cielo.webp", range: 150, drift: -20, z: "z-0" },
+  { src: "/img/cerro-lejano.webp", range: 105, drift: -55, z: "z-10" },
+  { src: "/img/cerro-medio.webp", range: 45, drift: -120, z: "z-20" },
+  // Primer plano: se adelanta a la página.
+  { src: "/img/cerro-cercano.webp", range: -70, drift: -210, z: "z-30" },
+];
 
-      {/* Velo: sostiene la lectura del texto sin apagar el verde */}
+export function OriginBand({ estate, lot, dictionary, locale }: OriginBandProps) {
+  const alt = estate.image ? translate(estate.image.alt, locale) : "";
+
+  return (
+    <section className="bg-forest relative h-[86svh] max-h-[760px] min-h-[420px] overflow-hidden">
+      {/* El posicionamiento va en un envoltorio: ParallaxFrame ya se declara
+          `relative`, y superponerle `absolute` lo deja sin altura. */}
+      {planos.map((plano, index) => (
+        <div key={plano.src} className={`absolute inset-0 ${plano.z}`}>
+          <ParallaxFrame range={plano.range} drift={plano.drift} className="h-full w-full">
+            <Photo
+              src={plano.src}
+              // Solo la primera capa describe la escena; el resto es decorativo.
+              alt={index === 0 ? alt : ""}
+              sizes="100vw"
+              className="h-full w-full"
+              fallback={index === 0 ? <MountainScene /> : <span />}
+            />
+          </ParallaxFrame>
+        </div>
+      ))}
+
+      {/* Velo: oscurece arriba para que se lea el nombre y cierra abajo contra
+          la sección siguiente, dejando limpio el centro, que es donde están
+          los cafetos en fruto. */}
       <div
-        className="from-forest-deep/85 via-forest-deep/45 to-forest absolute inset-0 bg-gradient-to-b"
+        className="absolute inset-0 z-40 bg-[linear-gradient(to_bottom,rgba(15,19,13,0.82)_0%,rgba(15,19,13,0.18)_38%,rgba(21,26,19,0.08)_68%,rgba(21,26,19,0.72)_100%)]"
         aria-hidden="true"
       />
 
-      <div className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
+      <div className="absolute inset-0 z-50 flex flex-col items-center justify-center px-6 text-center">
         <Reveal>
           <p className="eyebrow text-gold-light">{dictionary.sections.origin.eyebrow}</p>
         </Reveal>
 
         <Reveal delay={90}>
-          <p className="display-xl text-cream mt-4 text-[clamp(2rem,5.2vw,4rem)]">{estate.city}</p>
+          <p className="display-xl text-cream mt-4 text-[clamp(2rem,5.2vw,4rem)] drop-shadow-[0_2px_20px_rgba(0,0,0,0.55)]">
+            {estate.city}
+          </p>
         </Reveal>
 
         <Reveal delay={170}>

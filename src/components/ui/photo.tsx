@@ -4,7 +4,12 @@ import path from "node:path";
 import Image from "next/image";
 import type { ReactNode } from "react";
 
-const cache = new Map<string, boolean>();
+/**
+ * En producción el resultado no cambia durante la vida del proceso, así que se
+ * memoiza. En desarrollo no: si se memoizara, una imagen recién generada no
+ * aparecería hasta reiniciar el servidor.
+ */
+const cache = process.env.NODE_ENV === "production" ? new Map<string, boolean>() : null;
 
 /**
  * ¿Existe el archivo en /public? Se resuelve en el servidor, en tiempo de
@@ -13,11 +18,12 @@ const cache = new Map<string, boolean>();
  */
 function publicFileExists(src: string): boolean {
   if (!src.startsWith("/")) return false;
-  const cached = cache.get(src);
+
+  const cached = cache?.get(src);
   if (cached !== undefined) return cached;
 
   const exists = existsSync(path.join(process.cwd(), "public", src.replace(/^\//, "")));
-  cache.set(src, exists);
+  cache?.set(src, exists);
   return exists;
 }
 
