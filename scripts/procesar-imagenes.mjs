@@ -24,6 +24,21 @@ const OUT = path.join("public", "img");
 /** Fotografías de fondo: solo se redimensionan y comprimen. */
 const fondos = [{ src: "finca-original.jpeg", out: "finca.webp", width: 2400, quality: 76 }];
 
+/**
+ * Detalles del propio empaque usados como elemento gráfico.
+ * La acuarela botánica de la bolsa es el lenguaje visual de la marca para el
+ * origen: sale de ahí y no de una ilustración inventada.
+ */
+const detalles = [
+  {
+    src: "IMG-20260813-WA0092.jpg",
+    out: "botanica.webp",
+    // Zona limpia: sin la válvula desgasificadora ni la franja negra inferior.
+    crop: { left: 240, top: 498, width: 420, height: 190 },
+    width: 1260,
+  },
+];
+
 /** Recortes de las piezas de campaña: quitan el texto quemado en la imagen. */
 const ambiente = [
   {
@@ -83,6 +98,24 @@ async function comprimirFondos() {
   }
 }
 
+async function recortarDetalles() {
+  for (const item of detalles) {
+    const src = path.join(RAW, item.src);
+    if (!(await exists(src))) {
+      console.warn(`· falta ${src}, se omite`);
+      continue;
+    }
+
+    const target = path.join(OUT, item.out);
+    await sharp(src)
+      .extract(item.crop)
+      .resize({ width: item.width, kernel: "lanczos3" })
+      .webp({ quality: 88, effort: 6 })
+      .toFile(target);
+    console.log(`detalle   ${item.src} -> ${target}`);
+  }
+}
+
 async function recortarAmbiente() {
   for (const item of ambiente) {
     const src = path.join(RAW, item.src);
@@ -135,6 +168,7 @@ async function generarPortada() {
 
 await mkdir(OUT, { recursive: true });
 await comprimirFondos();
+await recortarDetalles();
 await recortarAmbiente();
 await ajustarProductos();
 await generarPortada();
