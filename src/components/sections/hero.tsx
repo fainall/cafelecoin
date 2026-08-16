@@ -3,6 +3,7 @@ import { formatWeight } from "@/content/helpers";
 import { translate, type Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n";
 import { FloatingBeans } from "@/components/ui/beans";
+import { ParallaxLayer } from "@/components/ui/parallax";
 import { Photo } from "@/components/ui/photo";
 import { ProductShot } from "@/components/ui/product-shot";
 import { Reveal } from "@/components/ui/reveal";
@@ -17,8 +18,15 @@ interface HeroProps {
 }
 
 /**
- * Portada: montaña al fondo, producto centrado sobre el eje y sello de origen.
- * Composición simétrica, como la portada de un catálogo impreso.
+ * Portada en tres planos con parallax:
+ *
+ *   fondo (cordillera y bruma) ── se queda atrás
+ *   producto ─────────────────── acompaña a la página
+ *   ladera en primer plano ───── se adelanta y tapa la base del empaque
+ *
+ * La ladera se recorta de la misma fotografía (scripts/separar-planos.mjs), así
+ * que al hacer scroll el empaque se hunde detrás del cerro real, no de un
+ * dibujo. En móvil solo se mueve el fondo: menos trabajo para la batería.
  */
 export function Hero({ estate, hero, dictionary, locale }: HeroProps) {
   const marquee = [
@@ -29,13 +37,16 @@ export function Hero({ estate, hero, dictionary, locale }: HeroProps) {
     { es: "Trazabilidad total", en: "Full traceability" },
   ].map((item) => translate(item, locale));
 
+  const alt = estate.image ? translate(estate.image.alt, locale) : "";
+
   return (
     <section className="relative flex min-h-[100svh] flex-col justify-between overflow-hidden pt-28 sm:pt-32">
-      <div className="absolute inset-0">
+      {/* Plano lejano */}
+      <ParallaxLayer speed={0.3} className="absolute inset-0">
         {estate.image ? (
           <Photo
             src={estate.image.src}
-            alt={translate(estate.image.alt, locale)}
+            alt={alt}
             focus={estate.image.focus}
             priority
             sizes="100vw"
@@ -45,7 +56,8 @@ export function Hero({ estate, hero, dictionary, locale }: HeroProps) {
         ) : (
           <MountainScene />
         )}
-      </div>
+      </ParallaxLayer>
+
       <div
         // Oscurece arriba para el titular y abajo para la cinta, dejando
         // respirar la franja central donde entra la luz del amanecer.
@@ -53,7 +65,11 @@ export function Hero({ estate, hero, dictionary, locale }: HeroProps) {
         aria-hidden="true"
       />
 
-      <div className="relative mx-auto w-full max-w-4xl px-6 text-center sm:px-10">
+      <ParallaxLayer
+        speed={-0.14}
+        fade
+        className="relative z-10 mx-auto w-full max-w-4xl px-6 text-center sm:px-10"
+      >
         <Reveal>
           <h1 className="display-xl text-cream text-[clamp(1.75rem,4.6vw,3.75rem)]">
             {translate(estate.tagline, locale)}
@@ -67,10 +83,13 @@ export function Hero({ estate, hero, dictionary, locale }: HeroProps) {
         <Reveal delay={240}>
           <p className="label text-gold-light mt-5">{dictionary.hero.eyebrow}</p>
         </Reveal>
-      </div>
+      </ParallaxLayer>
 
-      {/* Producto centrado con granos suspendidos fuera de foco */}
-      <div className="relative mx-auto mt-8 w-full max-w-3xl flex-1 px-6">
+      {/* Plano medio: el producto */}
+      <ParallaxLayer
+        speed={0.06}
+        className="relative z-10 mx-auto mt-8 w-full max-w-3xl flex-1 px-6"
+      >
         <FloatingBeans className="hidden sm:block" />
 
         <Reveal delay={320} className="relative flex h-full items-end justify-center">
@@ -102,10 +121,33 @@ export function Hero({ estate, hero, dictionary, locale }: HeroProps) {
             {locale === "en" ? "Single Estate Coffee" : "Café de finca propia"}
           </p>
         </Reveal>
-      </div>
+      </ParallaxLayer>
+
+      {/* Plano cercano: la ladera recortada, por delante del empaque */}
+      {estate.image && (
+        <ParallaxLayer
+          speed={-0.07}
+          className="pointer-events-none absolute inset-0 z-20 hidden sm:block"
+        >
+          <Photo
+            src="/img/finca-frente.webp"
+            // Decorativa: es el mismo terreno que ya describe la capa de fondo.
+            alt=""
+            focus={estate.image.focus}
+            priority
+            sizes="100vw"
+            className="h-full w-full"
+            fallback={<span />}
+          />
+          <div
+            className="to-forest absolute inset-0 bg-gradient-to-b from-transparent via-transparent"
+            aria-hidden="true"
+          />
+        </ParallaxLayer>
+      )}
 
       {/* Cinta de atributos */}
-      <div className="border-forest-line/70 bg-forest-deep/75 relative mt-8 border-y py-3.5 backdrop-blur-sm">
+      <div className="border-forest-line/70 bg-forest-deep/75 relative z-30 mt-8 border-y py-3.5 backdrop-blur-sm">
         <div className="animate-ticker flex w-max gap-12 whitespace-nowrap" aria-hidden="true">
           {[0, 1].map((copy) => (
             <ul key={copy} className="flex gap-12">

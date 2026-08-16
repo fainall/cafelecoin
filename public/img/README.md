@@ -11,7 +11,8 @@ pnpm imagenes
 
 | Archivo                      | Origen                       | Dónde aparece                      |
 | ---------------------------- | ---------------------------- | ---------------------------------- |
-| `finca.webp`                 | Paisaje, solo comprimido     | Fondo de la portada                |
+| `finca.webp`                 | Paisaje, solo comprimido     | Fondo de la portada (plano lejano) |
+| `finca-frente.webp`          | Ladera recortada del paisaje | Portada (plano cercano, parallax)  |
 | `producto-250g.webp`         | Foto de empaque, sin fondo   | Portada, portafolio, ficha de lote |
 | `producto-250g-reverso.webp` | Etiqueta trasera, sin fondo  | Ficha del origen                   |
 | `producto-2500g.webp`        | Bolsas HoReCa, sin fondo     | Portafolio (protagonista)          |
@@ -38,6 +39,16 @@ pnpm imagenes
    ```bash
    pnpm imagenes
    ```
+
+3. **Separar el primer plano de la portada** (solo si cambia `finca-original`):
+
+   ```bash
+   node scripts/separar-planos.mjs
+   ```
+
+   Detecta la silueta del terreno columna por columna —el cerro es oscuro y la
+   bruma clara— y genera `finca-frente.webp`, la capa que en la portada se
+   adelanta al hacer scroll y tapa la base del empaque.
 
 Los recortes de campaña quitan el titular y la franja de precio impresos sobre
 la foto: en el sitio esos textos los pone el HTML, no la imagen.
