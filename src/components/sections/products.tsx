@@ -6,7 +6,6 @@ import type { Dictionary } from "@/i18n";
 import { translate, type Locale } from "@/i18n/config";
 import { FloatingBeans } from "@/components/ui/beans";
 import { LinkButton } from "@/components/ui/button";
-import { RidgeEdge } from "@/components/ui/divider";
 import { ProductShot } from "@/components/ui/product-shot";
 import { Reveal } from "@/components/ui/reveal";
 import { Section } from "@/components/ui/section";
@@ -33,8 +32,6 @@ export function Products({ formats, lots, dictionary, locale }: ProductsProps) {
 
   return (
     <>
-      {/* Viene de Proceso, que va sobre papel apagado. */}
-      <RidgeEdge fill="fill-forest" behind="bg-paper-soft" />
       <Section id="portafolio" tone="dark" className="pt-6 sm:pt-10 lg:pt-12">
         <div className="grid items-center gap-16 lg:grid-cols-2 lg:gap-20">
           <div>
