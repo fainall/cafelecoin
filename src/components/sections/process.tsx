@@ -2,7 +2,7 @@ import type { Estate } from "@/content/schema";
 import type { Dictionary } from "@/i18n";
 import { translate, type Locale } from "@/i18n/config";
 import { Reveal } from "@/components/ui/reveal";
-import { Section, SectionHeading } from "@/components/ui/section";
+import { Section } from "@/components/ui/section";
 
 interface ProcessProps {
   estate: Estate;
@@ -23,13 +23,8 @@ interface ProcessProps {
 export function Process({ estate, dictionary, locale }: ProcessProps) {
   return (
     <Section id="proceso" tone="paper" className="bg-paper-soft">
-      <SectionHeading
-        eyebrow={dictionary.sections.process.eyebrow}
-        title={dictionary.sections.process.title}
-        tone="paper"
-      />
-
-      <Reveal className="mx-auto mt-10 max-w-2xl text-center">
+      {/* El título de esta sección va sobre el paisaje, en LandscapeBand. */}
+      <Reveal className="mx-auto max-w-2xl text-center">
         <p className="text-ink-soft leading-relaxed">{dictionary.process.intro}</p>
       </Reveal>
 

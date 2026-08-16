@@ -42,7 +42,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     <>
       <Hero estate={estate} hero={heroFormat} dictionary={dictionary} locale={locale} />
       <Coffee estate={estate} highlights={highlights} dictionary={dictionary} locale={locale} />
-      <LandscapeBand />
+      <LandscapeBand dictionary={dictionary} />
       <Process estate={estate} dictionary={dictionary} locale={locale} />
       <Products formats={formats} lots={lots} dictionary={dictionary} locale={locale} />
       <OriginProfile lot={featured} estate={estate} dictionary={dictionary} locale={locale} />
