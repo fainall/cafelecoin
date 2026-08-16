@@ -5,6 +5,7 @@
 export const es = {
   nav: {
     story: "Historia",
+    process: "Proceso",
     origin: "Origen",
     profile: "Perfil",
     portfolio: "Portafolio",
@@ -22,6 +23,7 @@ export const es = {
   },
   sections: {
     story: { eyebrow: "Nuestro", title: "Café" },
+    process: { eyebrow: "De la tierra", title: "A la taza" },
     origin: { eyebrow: "Ficha del", title: "Origen" },
     profile: { eyebrow: "Perfil", title: "Sensorial" },
     portfolio: { eyebrow: "Nuestros", title: "Productos" },
@@ -37,6 +39,10 @@ export const es = {
   common: {
     learnMore: "Conocer más",
     seeAll: "Ver todo",
+  },
+  process: {
+    intro: "Controlamos el ciclo completo dentro de la finca. Cada paso deja su huella en la taza.",
+    partner: "Socio estratégico",
   },
   origin: {
     species: "Especie",
@@ -68,7 +74,7 @@ export const es = {
     horecaNote: "cafeterías de especialidad, hoteles y restaurantes",
     valve: "Válvula desgasificadora",
     valveNote:
-      "Los formatos de 1 kg y 2.5 kg incluyen válvula desgasificadora: frescura garantizada desde el tueste.",
+      "El formato de cafetería de 2.5 kg incluye válvula desgasificadora: la taza llega como salió del tueste.",
     grind: "Grano entero o molido a pedido",
     viewLot: "Ver ficha del lote",
     unitsPerBox: "unidades por caja",

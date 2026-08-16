@@ -3,6 +3,7 @@ import type { Dictionary } from "./es";
 export const en: Dictionary = {
   nav: {
     story: "Story",
+    process: "Process",
     origin: "Origin",
     profile: "Profile",
     portfolio: "Portfolio",
@@ -20,6 +21,7 @@ export const en: Dictionary = {
   },
   sections: {
     story: { eyebrow: "Our", title: "Coffee" },
+    process: { eyebrow: "From the land", title: "To the cup" },
     origin: { eyebrow: "Origin", title: "Sheet" },
     profile: { eyebrow: "Sensory", title: "Profile" },
     portfolio: { eyebrow: "Our", title: "Products" },
@@ -35,6 +37,10 @@ export const en: Dictionary = {
   common: {
     learnMore: "Learn more",
     seeAll: "See all",
+  },
+  process: {
+    intro: "We control the full cycle inside the farm. Every step leaves its mark on the cup.",
+    partner: "Strategic partner",
   },
   origin: {
     species: "Species",
@@ -66,7 +72,7 @@ export const en: Dictionary = {
     horecaNote: "specialty coffee shops, hotels and restaurants",
     valve: "One-way degassing valve",
     valveNote:
-      "1 kg and 2.5 kg formats include a degassing valve: freshness guaranteed from the roast.",
+      "The 2.5 kg coffee-shop format includes a degassing valve: the cup arrives as it left the roaster.",
     grind: "Whole bean or ground to order",
     viewLot: "View lot sheet",
     unitsPerBox: "units per case",

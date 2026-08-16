@@ -6,6 +6,7 @@ import { Contact } from "@/components/sections/contact";
 import { ExportSection } from "@/components/sections/export-section";
 import { Hero } from "@/components/sections/hero";
 import { OriginProfile } from "@/components/sections/origin-profile";
+import { Process } from "@/components/sections/process";
 import { Products } from "@/components/sections/products";
 import { Testimonials } from "@/components/sections/testimonials";
 import { content } from "@/content";
@@ -40,6 +41,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     <>
       <Hero estate={estate} hero={heroFormat} dictionary={dictionary} locale={locale} />
       <Coffee estate={estate} highlights={highlights} dictionary={dictionary} locale={locale} />
+      <Process estate={estate} dictionary={dictionary} locale={locale} />
       <Products formats={formats} lots={lots} dictionary={dictionary} locale={locale} />
       <OriginProfile lot={featured} estate={estate} dictionary={dictionary} locale={locale} />
       <Band dictionary={dictionary} />

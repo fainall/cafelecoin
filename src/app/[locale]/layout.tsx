@@ -97,6 +97,7 @@ export default async function LocaleLayout({
 
   const navItems = [
     { href: "#historia", label: dictionary.nav.story },
+    { href: "#proceso", label: dictionary.nav.process },
     { href: "#origen", label: dictionary.nav.origin },
     { href: "#portafolio", label: dictionary.nav.portfolio },
     { href: "#exportacion", label: dictionary.nav.export },
