@@ -98,3 +98,57 @@ export function ParallaxLayer({
     </div>
   );
 }
+
+interface ParallaxFrameProps {
+  /** Recorrido total del contenido dentro del marco, en píxeles. */
+  range?: number;
+  className?: string;
+  children: ReactNode;
+}
+
+/**
+ * Marco con desplazamiento interno, para bandas que están a mitad de página.
+ *
+ * A diferencia de ParallaxLayer —que se apoya en el scroll absoluto y solo
+ * sirve en la portada—, aquí el avance se calcula respecto a la posición del
+ * propio marco: 0 cuando entra por abajo, 1 cuando sale por arriba. El
+ * contenido es más alto que el marco, así que nunca asoman los bordes.
+ */
+export function ParallaxFrame({ range = 140, className = "", children }: ParallaxFrameProps) {
+  const marco = useRef<HTMLDivElement>(null);
+  const movil = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const exterior = marco.current;
+    const interior = movil.current;
+    if (!exterior || !interior) return;
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    return subscribe(() => {
+      const alto = window.innerHeight || 800;
+      const rect = exterior.getBoundingClientRect();
+
+      // Fuera de pantalla no se calcula nada.
+      if (rect.bottom < -120 || rect.top > alto + 120) return;
+
+      const avance = (alto - rect.top) / (alto + rect.height);
+      const y = (avance - 0.5) * range;
+      interior.style.transform = `translate3d(0, ${y.toFixed(2)}px, 0)`;
+    });
+  }, [range]);
+
+  return (
+    <div ref={marco} className={`relative overflow-hidden ${className}`}>
+      {/* 18% de holgura arriba y abajo: más que el recorrido máximo del
+          contenido, para que nunca asome el borde del marco. */}
+      <div
+        ref={movil}
+        className="absolute inset-x-0 -top-[18%] h-[136%]"
+        style={{ willChange: "transform" }}
+      >
+        {children}
+      </div>
+    </div>
+  );
+}

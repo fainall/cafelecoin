@@ -53,39 +53,35 @@ export function Process({ estate, dictionary, locale }: ProcessProps) {
         </figure>
       </Reveal>
 
-      {/* Mismo ancho que la banda: los filetes y el borde de la imagen alinean. */}
-      <ol className="border-paper-line mx-auto mt-14 max-w-4xl border-l pl-8 lg:mt-16">
+      {/* Mismo ancho que la banda para que los bordes izquierdos alineen.
+          El número hace de elemento gráfico: sin viñetas ni filete lateral. */}
+      <ol className="mx-auto mt-14 grid max-w-4xl gap-x-14 sm:grid-cols-2 lg:mt-16">
         {estate.processSteps.map((step, index) => (
           <Reveal
             key={step.id}
             as="li"
             delay={index * 60}
-            className="relative pb-8 last:pb-0 lg:pb-9"
+            className="border-paper-line flex gap-5 border-b py-6 last:border-b-0 sm:[&:nth-last-child(2)]:border-b-0"
           >
-            {/* Marcador sobre el filete */}
             <span
-              className="border-gold bg-paper-soft absolute top-[7px] -left-8 block h-[9px] w-[9px] -translate-x-1/2 rotate-45 border"
+              className="font-display text-gold/45 mt-[2px] shrink-0 text-[2.75rem] leading-none tabular-nums"
               aria-hidden="true"
-            />
+            >
+              {String(index + 1).padStart(2, "0")}
+            </span>
 
-            <div className="flex gap-4">
-              <span className="label text-gold-deep w-6 shrink-0 pt-[3px]">
-                {String(index + 1).padStart(2, "0")}
-              </span>
-
-              <div>
-                <h3 className="font-display text-ink text-lg tracking-[0.05em]">
-                  {translate(step.title, locale)}
-                </h3>
-                <p className="text-ink-soft mt-1.5 max-w-[52ch] text-base leading-relaxed">
-                  {translate(step.body, locale)}
+            <div>
+              <h3 className="font-display text-ink text-lg tracking-[0.05em]">
+                {translate(step.title, locale)}
+              </h3>
+              <p className="text-ink-soft mt-1.5 text-base leading-relaxed">
+                {translate(step.body, locale)}
+              </p>
+              {step.partner && (
+                <p className="label text-gold-deep mt-2.5">
+                  {dictionary.process.partner} · {step.partner}
                 </p>
-                {step.partner && (
-                  <p className="label text-gold-deep mt-2.5">
-                    {dictionary.process.partner} · {step.partner}
-                  </p>
-                )}
-              </div>
+              )}
             </div>
           </Reveal>
         ))}
