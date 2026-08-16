@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+import { CartButton } from "@/components/cart/cart-button";
 import { Wordmark } from "@/components/ui/wordmark";
 import type { Locale } from "@/i18n/config";
 import { LocaleSwitcher } from "./locale-switcher";
@@ -20,6 +21,7 @@ interface SiteHeaderProps {
   ctaHref: string;
   menuLabel: string;
   skipLabel: string;
+  cartLabel: string;
 }
 
 /**
@@ -34,6 +36,7 @@ export function SiteHeader({
   ctaHref,
   menuLabel,
   skipLabel,
+  cartLabel,
 }: SiteHeaderProps) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -106,7 +109,8 @@ export function SiteHeader({
             <Wordmark className="h-12 w-auto sm:h-14" />
           </Link>
 
-          <div className="flex justify-end">
+          <div className="flex items-center justify-end gap-5">
+            <CartButton label={cartLabel} />
             <LocaleSwitcher current={locale} />
           </div>
         </div>

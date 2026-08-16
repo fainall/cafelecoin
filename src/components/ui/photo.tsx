@@ -9,6 +9,8 @@ import type { ReactNode } from "react";
  * memoiza. En desarrollo no: si se memoizara, una imagen recién generada no
  * aparecería hasta reiniciar el servidor.
  */
+// COMPONENTE DE SERVIDOR: comprueba el disco con node:fs. Importarlo desde un
+// componente "use client" rompe el empaquetado del navegador.
 const cache = process.env.NODE_ENV === "production" ? new Map<string, boolean>() : null;
 
 /**

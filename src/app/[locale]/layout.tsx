@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 import "../globals.css";
 
+import { CartDrawer } from "@/components/cart/cart-drawer";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { WhatsAppFab } from "@/components/layout/whatsapp-fab";
@@ -11,6 +12,7 @@ import { content } from "@/content";
 import { getPrimaryPhone, sampleRequestMessage, whatsappUrl } from "@/content/helpers";
 import { getDictionary } from "@/i18n";
 import { isLocale, locales, localeTags, type Locale } from "@/i18n/config";
+import { CartProvider } from "@/lib/cart/store";
 import { organizationJsonLd } from "@/lib/seo";
 
 /** Romana grabada para titulares y logotipo. */
@@ -91,11 +93,16 @@ export default async function LocaleLayout({
 
   const locale: Locale = raw;
   const dictionary = getDictionary(locale);
-  const [contact, estate] = await Promise.all([content.getContact(), content.getEstate()]);
+  const [contact, estate, formats] = await Promise.all([
+    content.getContact(),
+    content.getEstate(),
+    content.getFormats(),
+  ]);
   const phone = getPrimaryPhone(contact);
   const whatsapp = whatsappUrl(phone, sampleRequestMessage(locale));
 
   const navItems = [
+    { href: `/${locale}/tienda`, label: dictionary.nav.shop },
     { href: "#historia", label: dictionary.nav.story },
     { href: "#proceso", label: dictionary.nav.process },
     { href: "#origen", label: dictionary.nav.origin },
@@ -112,19 +119,24 @@ export default async function LocaleLayout({
       <body className="bg-forest text-cream antialiased">
         <div className="grain" aria-hidden="true" />
 
-        <SiteHeader
-          locale={locale}
-          brand={contact.brand}
-          items={navItems}
-          ctaLabel={dictionary.nav.cta}
-          ctaHref={whatsapp}
-          menuLabel={dictionary.nav.menu}
-          skipLabel={dictionary.nav.skipToContent}
-        />
+        <CartProvider catalogue={formats}>
+          <SiteHeader
+            locale={locale}
+            brand={contact.brand}
+            items={navItems}
+            ctaLabel={dictionary.nav.cta}
+            ctaHref={whatsapp}
+            menuLabel={dictionary.nav.menu}
+            skipLabel={dictionary.nav.skipToContent}
+            cartLabel={dictionary.cart.open}
+          />
 
-        <main id="contenido">{children}</main>
+          <main id="contenido">{children}</main>
 
-        <SiteFooter locale={locale} dictionary={dictionary} contact={contact} estate={estate} />
+          <SiteFooter locale={locale} dictionary={dictionary} contact={contact} estate={estate} />
+          <CartDrawer dictionary={dictionary} locale={locale} quoteHref={`/${locale}#contacto`} />
+        </CartProvider>
+
         <WhatsAppFab href={whatsapp} label="WhatsApp" />
 
         <script
