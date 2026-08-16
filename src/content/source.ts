@@ -81,7 +81,13 @@ export function loadStaticContent(): Snapshot {
   const formats = parse(z.array(FormatSchema).min(1), rawFormats, "formats");
   const lots = parse(z.array(LotSchema).min(1), rawLots, "lots");
   const exportInfo = parse(ExportInfoSchema, rawExportInfo, "exportInfo");
-  const contact = parse(ContactSchema, rawContact, "contact");
+  // El dominio se puede fijar por entorno: así el mismo código sirve para la
+  // vista previa y para producción sin tocar el contenido. Se valida igual.
+  const contact = parse(
+    ContactSchema,
+    { ...rawContact, siteUrl: process.env.NEXT_PUBLIC_SITE_URL || rawContact.siteUrl },
+    "contact",
+  );
   const highlights = parse(z.array(HighlightSchema).min(1), rawHighlights, "highlights");
   const testimonials = parse(z.array(TestimonialSchema), rawTestimonials, "testimonials");
 

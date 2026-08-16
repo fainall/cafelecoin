@@ -152,7 +152,11 @@ let cached: LeadStore | null = null;
 export function getLeadStore(): LeadStore {
   if (cached) return cached;
 
-  const requested = (process.env.LEADS_STORE ?? "file,console")
+  // En Vercel el disco es de solo lectura, así que "file" siempre fallaría:
+  // ahí el valor por defecto no lo incluye.
+  const porDefecto = process.env.VERCEL ? "console" : "file,console";
+
+  const requested = (process.env.LEADS_STORE ?? porDefecto)
     .split(",")
     .map((name) => name.trim())
     .filter(Boolean);
@@ -162,6 +166,16 @@ export function getLeadStore(): LeadStore {
     if (!store) throw new Error(`Destino de leads desconocido: "${name}"`);
     return store;
   });
+
+  // Sin un destino duradero las solicitudes solo quedan en el log del servidor,
+  // que se rota y se pierde. Vale la pena gritarlo en el arranque.
+  const duraderos = stores.filter((store) => store.name !== "console");
+  if (duraderos.length === 0) {
+    console.warn(
+      "[leads] No hay destino duradero configurado. Define LEADS_STORE=email o webhook, " +
+        "o las solicitudes de muestras se perderán.",
+    );
+  }
 
   cached = stores.length === 1 ? stores[0] : compositeLeadStore(stores);
   return cached;
