@@ -100,6 +100,11 @@ export const ProductLineInfoSchema = z.object({
   description: LocalizedStringSchema,
   /** Rasgos que distinguen la línea, para listar bajo la descripción. */
   traits: z.array(LocalizedStringSchema).default([]),
+  /**
+   * La línea se cierra por cotización, no por carrito: se ofrece un acceso
+   * directo al formulario con sus formatos ya marcados.
+   */
+  requestQuote: z.boolean().default(false),
 });
 export type ProductLineInfo = z.output<typeof ProductLineInfoSchema>;
 

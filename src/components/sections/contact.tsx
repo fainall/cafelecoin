@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+
 import {
   formatWeight,
   instagramUrl,
@@ -72,15 +74,19 @@ export function Contact({
 
       <div className="mt-16 grid gap-16 lg:grid-cols-12 lg:gap-20">
         <div className="lg:col-span-7">
-          <SampleRequestForm
-            dictionary={dictionary}
-            locale={locale}
-            lotSlug={lotSlug}
-            formats={formats.map((format) => ({
-              id: format.id,
-              label: formatWeight(format.grams, locale),
-            }))}
-          />
+          {/* useSearchParams necesita frontera de Suspense: la página es
+              estática y el formulario lee la preselección en el navegador. */}
+          <Suspense fallback={<div className="min-h-[32rem]" />}>
+            <SampleRequestForm
+              dictionary={dictionary}
+              locale={locale}
+              lotSlug={lotSlug}
+              formats={formats.map((format) => ({
+                id: format.id,
+                label: formatWeight(format.grams, locale),
+              }))}
+            />
+          </Suspense>
         </div>
 
         <div className="lg:col-span-5">

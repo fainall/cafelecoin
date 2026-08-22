@@ -134,7 +134,7 @@ export default async function LocaleLayout({
           <main id="contenido">{children}</main>
 
           <SiteFooter locale={locale} dictionary={dictionary} contact={contact} estate={estate} />
-          <CartDrawer dictionary={dictionary} locale={locale} quoteHref={`/${locale}#contacto`} />
+          <CartDrawer dictionary={dictionary} locale={locale} />
         </CartProvider>
 
         <WhatsAppFab href={whatsapp} label="WhatsApp" />

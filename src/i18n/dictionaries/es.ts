@@ -64,6 +64,8 @@ export const es = {
     title: "Tienda",
     intro:
       "Café de finca propia, tostado por Tisquesusa y despachado desde nuestra bodega. Para volúmenes de cafetería, pedí cotización.",
+    quoteCta: "Pedir cotización para mi cafetería",
+    quoteNote: "¿Compras por volumen? Te armamos una propuesta con precio por kilo y despacho.",
     wholesaleTitle: "Precio por volumen",
     backHome: "Volver al inicio",
   },

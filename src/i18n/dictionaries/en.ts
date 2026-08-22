@@ -62,6 +62,9 @@ export const en: Dictionary = {
     title: "Shop",
     intro:
       "Coffee from our own farm, roasted by Tisquesusa and shipped from our warehouse. For coffee-shop volumes, request a quote.",
+    quoteCta: "Request a quote for my coffee shop",
+    quoteNote:
+      "Buying by volume? We will put together a proposal with per-kilo pricing and delivery.",
     wholesaleTitle: "Volume pricing",
     backHome: "Back to home",
   },

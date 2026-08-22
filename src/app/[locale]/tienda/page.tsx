@@ -13,6 +13,7 @@ import { getDictionary } from "@/i18n";
 import type { Dictionary } from "@/i18n";
 import { isLocale, locales, localeTags, translate, type Locale } from "@/i18n/config";
 import { formatMoney } from "@/lib/cart/money";
+import { quoteHref } from "@/lib/cart/quote";
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -137,6 +138,27 @@ function LineBlock({
                 </li>
               ))}
             </ul>
+
+            {/* Esta línea no se cierra por carrito sino por propuesta: el
+                enlace lleva sus formatos ya marcados en el formulario. */}
+            {line.requestQuote && (
+              <div className="mt-8">
+                <Link
+                  href={quoteHref(
+                    locale,
+                    formats.map((format) => format.id),
+                  )}
+                  className={`font-display inline-block border px-8 py-3.5 text-[0.72rem] tracking-[0.22em] uppercase transition-colors ${
+                    claro
+                      ? "border-ink/25 text-ink hover:bg-ink hover:text-paper"
+                      : "border-gold/50 text-gold-light hover:bg-gold hover:text-forest-deep"
+                  }`}
+                >
+                  {dictionary.shop.quoteCta}
+                </Link>
+                <p className={`mt-3 max-w-[38ch] text-sm ${t.body}`}>{dictionary.shop.quoteNote}</p>
+              </div>
+            )}
           </Reveal>
 
           <div className="grid gap-8 lg:col-span-8 lg:grid-cols-2">

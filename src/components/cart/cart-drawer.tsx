@@ -7,17 +7,16 @@ import { formatWeight } from "@/content/helpers";
 import type { Dictionary } from "@/i18n";
 import { translate, type Locale } from "@/i18n/config";
 import { formatMoney } from "@/lib/cart/money";
+import { quoteHref } from "@/lib/cart/quote";
 import { useCart } from "@/lib/cart/store";
 
 interface CartDrawerProps {
   dictionary: Dictionary;
   locale: Locale;
-  /** Enlace al formulario de cotización, para pedidos mayoristas. */
-  quoteHref: string;
 }
 
 /** Panel lateral con el pedido en curso. */
-export function CartDrawer({ dictionary, locale, quoteHref }: CartDrawerProps) {
+export function CartDrawer({ dictionary, locale }: CartDrawerProps) {
   const { summary, open, setOpen, setQty, remove, units } = useCart();
   const t = dictionary.cart;
 
@@ -167,7 +166,10 @@ export function CartDrawer({ dictionary, locale, quoteHref }: CartDrawerProps) {
             </button>
 
             <a
-              href={quoteHref}
+              href={quoteHref(
+                locale,
+                summary.lines.map((line) => line.format.id),
+              )}
               onClick={() => setOpen(false)}
               className="border-forest-line text-cream-dim hover:text-cream font-display mt-3 block w-full border px-9 py-4 text-center text-[0.72rem] tracking-[0.22em] uppercase transition-colors"
             >

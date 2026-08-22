@@ -1,10 +1,12 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import { useState, type FormEvent } from "react";
 
 import { Button } from "@/components/ui/button";
 import type { Dictionary } from "@/i18n";
 import type { Locale } from "@/i18n/config";
+import { readQuoteFormats } from "@/lib/cart/quote";
 import { leadChannels, leadCountries } from "@/lib/leads/schema";
 
 export interface FormatOption {
@@ -33,6 +35,8 @@ export function SampleRequestForm({
   lotSlug,
 }: SampleRequestFormProps) {
   const t = dictionary.form;
+  // Quien llega desde la tienda trae sus formatos en la URL: se marcan solos.
+  const preseleccion = readQuoteFormats(useSearchParams());
   const [status, setStatus] = useState<Status>("idle");
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -175,6 +179,7 @@ export function SampleRequestForm({
                 type="checkbox"
                 name="formatIds"
                 value={format.id}
+                defaultChecked={preseleccion.includes(format.id)}
                 className="accent-gold h-3 w-3"
               />
               {format.label}

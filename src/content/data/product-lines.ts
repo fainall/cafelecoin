@@ -38,5 +38,6 @@ export const productLines: z.input<typeof ProductLineInfoSchema>[] = [
       { es: "Válvula desgasificadora", en: "Degassing valve" },
       { es: "Precio por volumen", en: "Volume pricing" },
     ],
+    requestQuote: true,
   },
 ];
