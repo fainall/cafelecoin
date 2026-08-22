@@ -85,6 +85,24 @@ export type PriceTier = z.output<typeof PriceTierSchema>;
 export const StockSchema = z.enum(["disponible", "agotado", "bajo-pedido"]);
 export type Stock = z.output<typeof StockSchema>;
 
+/**
+ * Identidad de cada línea comercial.
+ *
+ * No son dos tamaños del mismo café: son dos productos con etiqueta, público y
+ * argumento distintos. La línea manda sobre cómo se presenta cada formato.
+ */
+export const ProductLineInfoSchema = z.object({
+  id: ProductLineSchema,
+  /** Nombre impreso en el empaque. */
+  name: z.string().min(1),
+  tagline: LocalizedStringSchema,
+  audience: LocalizedStringSchema,
+  description: LocalizedStringSchema,
+  /** Rasgos que distinguen la línea, para listar bajo la descripción. */
+  traits: z.array(LocalizedStringSchema).default([]),
+});
+export type ProductLineInfo = z.output<typeof ProductLineInfoSchema>;
+
 export const FormatSchema = z.object({
   id: z.string().min(1),
   sku: z.string().min(1).optional(),

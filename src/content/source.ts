@@ -6,6 +6,7 @@ import { exportInfo as rawExportInfo } from "./data/export-info";
 import { formats as rawFormats } from "./data/formats";
 import { highlights as rawHighlights } from "./data/highlights";
 import { lots as rawLots } from "./data/lots";
+import { productLines as rawProductLines } from "./data/product-lines";
 import { testimonials as rawTestimonials } from "./data/testimonials";
 import {
   ContactSchema,
@@ -14,6 +15,7 @@ import {
   FormatSchema,
   HighlightSchema,
   LotSchema,
+  ProductLineInfoSchema,
   TestimonialSchema,
   type Contact,
   type Estate,
@@ -21,6 +23,7 @@ import {
   type Format,
   type Highlight,
   type Lot,
+  type ProductLineInfo,
   type Testimonial,
 } from "./schema";
 
@@ -46,6 +49,7 @@ export interface ContentSource {
   getLot(slug: string): Promise<Lot | null>;
   getExportInfo(): Promise<ExportInfo>;
   getContact(): Promise<Contact>;
+  getProductLines(): Promise<ProductLineInfo[]>;
   getHighlights(): Promise<Highlight[]>;
   getTestimonials(): Promise<Testimonial[]>;
 }
@@ -67,6 +71,7 @@ interface Snapshot {
   lots: Lot[];
   exportInfo: ExportInfo;
   contact: Contact;
+  productLines: ProductLineInfo[];
   highlights: Highlight[];
   testimonials: Testimonial[];
 }
@@ -88,6 +93,11 @@ export function loadStaticContent(): Snapshot {
     { ...rawContact, siteUrl: process.env.NEXT_PUBLIC_SITE_URL || rawContact.siteUrl },
     "contact",
   );
+  const productLines = parse(
+    z.array(ProductLineInfoSchema).min(1),
+    rawProductLines,
+    "productLines",
+  );
   const highlights = parse(z.array(HighlightSchema).min(1), rawHighlights, "highlights");
   const testimonials = parse(z.array(TestimonialSchema), rawTestimonials, "testimonials");
 
@@ -97,6 +107,15 @@ export function loadStaticContent(): Snapshot {
       if (!formatIds.has(id)) {
         throw new ContentError(`El lote "${lot.slug}" referencia el formato inexistente "${id}".`);
       }
+    }
+  }
+
+  const lineasDeclaradas = new Set(productLines.map((linea) => linea.id));
+  for (const format of formats) {
+    if (!lineasDeclaradas.has(format.line)) {
+      throw new ContentError(
+        `El formato "${format.id}" pertenece a la línea "${format.line}", que no está declarada.`,
+      );
     }
   }
 
@@ -114,7 +133,16 @@ export function loadStaticContent(): Snapshot {
     );
   }
 
-  snapshot = { estate, formats, lots, exportInfo, contact, highlights, testimonials };
+  snapshot = {
+    estate,
+    formats,
+    lots,
+    exportInfo,
+    contact,
+    productLines,
+    highlights,
+    testimonials,
+  };
   return snapshot;
 }
 
@@ -148,6 +176,9 @@ export const staticContentSource: ContentSource = {
   },
   async getContact() {
     return loadStaticContent().contact;
+  },
+  async getProductLines() {
+    return loadStaticContent().productLines;
   },
   async getHighlights() {
     return loadStaticContent().highlights;

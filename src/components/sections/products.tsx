@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import { formatsByLine, formatWeight, lotPath } from "@/content/helpers";
-import type { Format, Lot } from "@/content/schema";
+import type { Format, Lot, ProductLineInfo } from "@/content/schema";
 import type { Dictionary } from "@/i18n";
 import { translate, type Locale } from "@/i18n/config";
 import { formatMoney } from "@/lib/cart/money";
@@ -13,23 +13,26 @@ import { Section } from "@/components/ui/section";
 
 interface ProductsProps {
   formats: Format[];
+  lines: ProductLineInfo[];
   lots: Lot[];
   dictionary: Dictionary;
   locale: Locale;
 }
 
 /** Portafolio: la bolsa suspendida entre granos y las dos líneas comerciales. */
-export function Products({ formats, lots, dictionary, locale }: ProductsProps) {
+export function Products({ formats, lines, lots, dictionary, locale }: ProductsProps) {
   const retail = formatsByLine(formats, "retail");
   const horeca = formatsByLine(formats, "horeca");
   const featured = lots[0];
   // Protagoniza la sección el formato mayor de HoReCa; si no hay, el primero.
   const showcase = horeca.at(-1) ?? formats[0];
 
+  // Cada grupo toma su nombre de la línea, no de una etiqueta genérica.
+  const porLinea = new Map(lines.map((linea) => [linea.id, linea]));
   const groups = [
-    { title: dictionary.portfolio.retail, note: dictionary.portfolio.retailNote, items: retail },
-    { title: dictionary.portfolio.horeca, note: dictionary.portfolio.horecaNote, items: horeca },
-  ];
+    { line: porLinea.get("retail"), items: retail },
+    { line: porLinea.get("horeca"), items: horeca },
+  ].filter((grupo) => grupo.line && grupo.items.length > 0);
 
   return (
     <>
@@ -45,11 +48,14 @@ export function Products({ formats, lots, dictionary, locale }: ProductsProps) {
 
             <div className="mt-12 space-y-10">
               {groups.map((group, groupIndex) => (
-                <Reveal key={group.title} delay={groupIndex * 120}>
-                  <h3 className="font-display text-cream text-xl tracking-[0.08em]">
-                    {group.title}
+                <Reveal key={group.line!.id} delay={groupIndex * 120}>
+                  <p className="label text-gold">{translate(group.line!.audience, locale)}</p>
+                  <h3 className="font-display text-cream mt-2 text-xl tracking-[0.08em]">
+                    {group.line!.name}
                   </h3>
-                  <p className="text-cream-faint mt-1 text-base italic">— {group.note}</p>
+                  <p className="text-cream-faint mt-1 text-base italic">
+                    {translate(group.line!.tagline, locale)}
+                  </p>
 
                   <ul className="mt-5">
                     {group.items.map((format) => (

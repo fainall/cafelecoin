@@ -19,10 +19,11 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const locale: Locale = raw;
 
   const dictionary = getDictionary(locale);
-  const [estate, formats, lots, exportInfo, contactInfo, highlights, testimonials] =
+  const [estate, formats, productLines, lots, exportInfo, contactInfo, highlights, testimonials] =
     await Promise.all([
       content.getEstate(),
       content.getFormats(),
+      content.getProductLines(),
       content.getLots(),
       content.getExportInfo(),
       content.getContact(),
@@ -42,7 +43,13 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <Hero estate={estate} hero={heroFormat} dictionary={dictionary} locale={locale} />
       <Coffee estate={estate} highlights={highlights} dictionary={dictionary} locale={locale} />
       <Process estate={estate} dictionary={dictionary} locale={locale} />
-      <Products formats={formats} lots={lots} dictionary={dictionary} locale={locale} />
+      <Products
+        formats={formats}
+        lines={productLines}
+        lots={lots}
+        dictionary={dictionary}
+        locale={locale}
+      />
       <OriginProfile lot={featured} estate={estate} dictionary={dictionary} locale={locale} />
       <Band dictionary={dictionary} />
       <Testimonials
