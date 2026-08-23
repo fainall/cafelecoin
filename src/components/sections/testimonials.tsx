@@ -17,7 +17,9 @@ interface TestimonialsProps {
  */
 export function Testimonials({ testimonials, estate, dictionary, locale }: TestimonialsProps) {
   return (
-    <Section id="testimonios" tone="paper">
+    // Va pegada a la ficha de origen, que ya es papel: sin la banda dorada en
+    // medio, las dos separaciones sumaban un vacío de crema de 256 px.
+    <Section id="testimonios" tone="paper" className="pt-0 sm:pt-0 lg:pt-0">
       <SectionHeading
         eyebrow={dictionary.sections.testimonials.eyebrow}
         title={dictionary.sections.testimonials.title}

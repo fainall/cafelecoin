@@ -30,11 +30,6 @@ export const en: Dictionary = {
     testimonials: { eyebrow: "What", title: "People Say" },
     contact: { eyebrow: "Let's", title: "Talk" },
   },
-  band: {
-    title: "More than rare. Unique.",
-    subtitle: "Coffee with an intense aroma and a perfect balance of acidity and body.",
-    cta: "Request samples",
-  },
   cart: {
     title: "Your order",
     open: "View order",

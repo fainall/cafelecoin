@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 
-import { Band } from "@/components/sections/band";
 import { Coffee } from "@/components/sections/coffee";
 import { Contact } from "@/components/sections/contact";
 import { ExportSection } from "@/components/sections/export-section";
@@ -51,7 +50,6 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         locale={locale}
       />
       <OriginProfile lot={featured} estate={estate} dictionary={dictionary} locale={locale} />
-      <Band dictionary={dictionary} />
       <Testimonials
         testimonials={testimonials}
         estate={estate}

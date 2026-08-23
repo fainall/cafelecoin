@@ -32,11 +32,6 @@ export const es = {
     testimonials: { eyebrow: "Lo que", title: "Dicen" },
     contact: { eyebrow: "Hablemos", title: "Contacto" },
   },
-  band: {
-    title: "Más que raro. Único.",
-    subtitle: "Café con aroma intenso y un equilibrio perfecto de acidez y cuerpo.",
-    cta: "Solicitar muestras",
-  },
   cart: {
     title: "Tu pedido",
     open: "Ver pedido",
