@@ -27,6 +27,9 @@
   --color-gold-light: #d3ba82;
   --color-gold-deep: #7a6733;
 
+  /* Café empapando el papel: la orilla de la apertura y de las costuras. */
+  --color-stain: #b98b52;
+
   --color-danger: #c2603f;
 
   --font-display: var(--font-cinzel), "Trajan Pro", Georgia, serif;
@@ -218,7 +221,7 @@
 
   /* Agua teñida: la franja húmeda que queda entre las dos veladuras. */
   .apertura__tinte {
-    fill: #b98b52;
+    fill: var(--color-stain);
     fill-opacity: 0.6;
   }
 

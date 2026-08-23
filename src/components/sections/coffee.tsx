@@ -20,7 +20,7 @@ export function Coffee({ estate, highlights, dictionary, locale }: CoffeeProps) 
 
   return (
     <>
-      <TornEdge fill="fill-paper" behind="bg-forest" />
+      <TornEdge fill="fill-paper" behind="bg-forest" seed={5} />
       <Section id="historia" tone="paper" className="pt-16 sm:pt-20 lg:pt-24">
         <SectionHeading
           eyebrow={dictionary.sections.story.eyebrow}

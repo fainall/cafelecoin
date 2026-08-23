@@ -125,7 +125,7 @@ export default async function LotPage({
         </div>
       </Section>
 
-      <TornEdge fill="fill-paper" behind="bg-forest" />
+      <TornEdge fill="fill-paper" behind="bg-forest" seed={23} />
       <Section tone="paper" className="pt-16 sm:pt-20">
         <div className="grid gap-16 lg:grid-cols-2 lg:gap-20">
           <div>

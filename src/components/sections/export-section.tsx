@@ -14,7 +14,7 @@ interface ExportSectionProps {
 export function ExportSection({ exportInfo, dictionary, locale }: ExportSectionProps) {
   return (
     <>
-      <TornEdge fill="fill-forest" behind="bg-paper" />
+      <TornEdge fill="fill-forest" behind="bg-paper" seed={88} />
       <Section id="exportacion" tone="dark" className="pt-6 sm:pt-10 lg:pt-12">
         <SectionHeading
           eyebrow={dictionary.sections.export.eyebrow}

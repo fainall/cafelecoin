@@ -14,19 +14,98 @@ interface DividerProps {
   className?: string;
 }
 
-/** Borde de papel rasgado: irregular y de amplitud corta, como un desgarro real. */
+interface TornEdgeProps extends DividerProps {
+  /**
+   * Cambia la silueta del desgarro. Dos costuras de la misma página no deben
+   * compartir semilla: el mismo perfil repetido delata que es un recurso.
+   */
+  seed?: number;
+}
+
+/**
+ * Borde de papel rasgado.
+ *
+ * El desgarro no se dibuja punto por punto: se rompe. Un `feTurbulence`
+ * desplaza el canto recto de un rectángulo hasta deshilacharlo, igual que en la
+ * apertura de la página —misma materia en los dos sitios—. Una polilínea a mano
+ * siempre acaba delatándose: los segmentos son rectos y la amplitud, la misma.
+ *
+ * Tres capas, de atrás hacia delante:
+ *
+ *   sangría ── la tinta del café, medio paso por delante del canto
+ *   sello ──── tapa los huecos hondos; el desgarro se ve, la mugre no
+ *   canto ──── el borde rasgado de la superficie entrante
+ *
+ * Sin el sello, el desplazamiento arrastra transparencia por debajo del borde y
+ * siembra motas oscuras dentro del papel.
+ */
 export function TornEdge({
   fill = "fill-paper",
   behind = "bg-forest",
   className = "",
-}: DividerProps) {
+  seed = 5,
+}: TornEdgeProps) {
+  const canto = `borde-canto-${seed}`;
+  const sangria = `borde-sangria-${seed}`;
+
   return (
     <div
       className={`pointer-events-none relative -mb-px w-full ${behind} ${className}`}
       aria-hidden="true"
     >
-      <svg viewBox="0 0 1440 40" preserveAspectRatio="none" className={`block h-7 w-full ${fill}`}>
-        <path d="M0 40 L0 21 L26 25 L54 15 L78 22 L108 12 L134 21 L166 11 L196 20 L228 13 L254 23 L286 16 L318 24 L344 14 L378 22 L408 12 L436 21 L468 15 L496 23 L528 13 L556 22 L588 16 L618 24 L648 14 L676 21 L708 12 L738 22 L766 15 L798 23 L828 13 L858 21 L888 16 L918 24 L948 14 L978 22 L1008 12 L1038 21 L1066 15 L1098 23 L1128 13 L1156 22 L1188 16 L1218 24 L1248 14 L1278 21 L1308 12 L1338 22 L1368 15 L1400 23 L1440 17 L1440 40 Z" />
+      <svg
+        viewBox="0 0 1440 60"
+        preserveAspectRatio="none"
+        className={`block h-8 w-full sm:h-10 ${fill}`}
+      >
+        <defs>
+          {/* Región fija en unidades del lienzo: el ruido no depende del ancho
+              de la ventana. */}
+          {[
+            { id: canto, escala: 16, semilla: seed },
+            { id: sangria, escala: 24, semilla: seed + 17 },
+          ].map((capa) => (
+            <filter
+              key={capa.id}
+              id={capa.id}
+              filterUnits="userSpaceOnUse"
+              x={-60}
+              y={-20}
+              width={1560}
+              height={100}
+              colorInterpolationFilters="sRGB"
+            >
+              <feTurbulence
+                type="fractalNoise"
+                baseFrequency="0.016 0.022"
+                numOctaves="4"
+                seed={capa.semilla}
+                result="fibra"
+              />
+              <feDisplacementMap
+                in="SourceGraphic"
+                in2="fibra"
+                scale={capa.escala}
+                xChannelSelector="R"
+                yChannelSelector="G"
+              />
+            </filter>
+          ))}
+        </defs>
+
+        {/* Los rectángulos se desbordan a los lados para que el filtro nunca
+            deje ver su propio borde. */}
+        <rect
+          className="fill-stain"
+          fillOpacity={0.35}
+          x={-60}
+          y={26}
+          width={1560}
+          height={140}
+          filter={`url(#${sangria})`}
+        />
+        <rect x={-60} y={40} width={1560} height={140} />
+        <rect x={-60} y={32} width={1560} height={140} filter={`url(#${canto})`} />
       </svg>
     </div>
   );

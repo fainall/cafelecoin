@@ -22,7 +22,7 @@ export function OriginProfile({ lot, estate, dictionary, locale }: OriginProfile
 
   return (
     <>
-      <TornEdge fill="fill-paper" behind="bg-forest" />
+      <TornEdge fill="fill-paper" behind="bg-forest" seed={41} />
       <Section id="origen" tone="paper" className="pt-16 sm:pt-20 lg:pt-24">
         <SectionHeading
           eyebrow={dictionary.sections.origin.eyebrow}
