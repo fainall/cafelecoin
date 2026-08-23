@@ -8,6 +8,7 @@ import { CartDrawer } from "@/components/cart/cart-drawer";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { WhatsAppFab } from "@/components/layout/whatsapp-fab";
+import { Apertura } from "@/components/ui/apertura";
 import { content } from "@/content";
 import { getPrimaryPhone, sampleRequestMessage, whatsappUrl } from "@/content/helpers";
 import { getDictionary } from "@/i18n";
@@ -117,6 +118,7 @@ export default async function LocaleLayout({
       className={`${cinzel.variable} ${cormorant.variable} ${archivo.variable}`}
     >
       <body className="bg-forest text-cream antialiased">
+        <Apertura />
         <div className="grain" aria-hidden="true" />
 
         <CartProvider catalogue={formats}>

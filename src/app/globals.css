@@ -192,4 +192,65 @@
       transform: none;
     }
   }
+
+  /* ───────────── Apertura: la mancha que abre la página ─────────────
+     Velo de papel que se retira como una mancha de café al empaparse.
+     Todo ocurre en CSS y termina en `forwards`: si el JavaScript nunca
+     corre, el velo se retira igual. La regla global de movimiento
+     reducido lo apaga al instante.                                    */
+  .apertura {
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    pointer-events: none;
+    animation: apertura-velo 1.2s linear forwards;
+  }
+
+  .apertura__lienzo {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .apertura__papel {
+    fill: var(--color-paper);
+  }
+
+  /* Agua teñida: la franja húmeda que queda entre las dos veladuras. */
+  .apertura__tinte {
+    fill: #b98b52;
+    fill-opacity: 0.6;
+  }
+
+  /* Solo crece el agua: el filtro queda por fuera de esta escala. */
+  .apertura__mancha {
+    transform-box: view-box;
+    transform-origin: 60px 60px;
+    animation: apertura-mancha 900ms cubic-bezier(0.16, 0.24, 0.3, 1) 40ms both;
+  }
+
+  .apertura__mancha--rezagada {
+    animation-duration: 980ms;
+    animation-delay: 200ms;
+  }
+}
+
+@keyframes apertura-mancha {
+  from {
+    transform: scale(0.05);
+  }
+  to {
+    transform: scale(3.7);
+  }
+}
+
+@keyframes apertura-velo {
+  0%,
+  72% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
 }
