@@ -47,7 +47,7 @@ export const es = {
     each: "c/u",
     total: "Total",
     weight: "Peso total",
-    shippingNote: "El envío se calcula en el siguiente paso.",
+    shippingNote: "El precio ya incluye el despacho.",
     checkout: "Ir a pagar",
     quote: "Pedir cotización mayorista",
     keepBrowsing: "Seguir viendo",
@@ -102,7 +102,7 @@ export const es = {
     horecaNote: "cafeterías de especialidad, hoteles y restaurantes",
     valve: "Válvula desgasificadora",
     valveNote:
-      "El formato de cafetería de 2.5 kg incluye válvula desgasificadora: la taza llega como salió del tueste.",
+      "Los formatos de cafetería incluyen válvula desgasificadora: la taza llega como salió del tueste.",
     grind: "Grano entero o molido a pedido",
     viewLot: "Ver ficha del lote",
     unitsPerBox: "unidades por caja",

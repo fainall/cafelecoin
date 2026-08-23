@@ -45,7 +45,7 @@ export const en: Dictionary = {
     each: "each",
     total: "Total",
     weight: "Total weight",
-    shippingNote: "Shipping is calculated in the next step.",
+    shippingNote: "The price already includes shipping.",
     checkout: "Checkout",
     quote: "Request wholesale quote",
     keepBrowsing: "Keep browsing",
@@ -101,7 +101,7 @@ export const en: Dictionary = {
     horecaNote: "specialty coffee shops, hotels and restaurants",
     valve: "One-way degassing valve",
     valveNote:
-      "The 2.5 kg coffee-shop format includes a degassing valve: the cup arrives as it left the roaster.",
+      "The coffee-shop formats include a degassing valve: the cup arrives as it left the roaster.",
     grind: "Whole bean or ground to order",
     viewLot: "View lot sheet",
     unitsPerBox: "units per case",

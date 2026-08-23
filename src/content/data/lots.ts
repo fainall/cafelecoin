@@ -54,7 +54,7 @@ export const lots: z.input<typeof LotSchema>[] = [
         },
       ],
     },
-    formatIds: ["retail-250", "horeca-2500"],
+    formatIds: ["retail-250", "retail-500", "horeca-1000", "horeca-2500"],
   },
   {
     // Ejemplo de lote en preparación: demuestra el flujo editorial sin publicarse.

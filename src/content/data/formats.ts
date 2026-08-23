@@ -2,8 +2,11 @@ import type { z } from "zod";
 import type { FormatSchema } from "../schema";
 
 /**
- * Catálogo de formatos (SKU), tomado de los empaques reales:
- * 250 g retail (bolsa botánica) y 2.5 kg cafetería (bolsa negra con válvula).
+ * Catálogo de formatos (SKU): cuatro pesos en dos líneas, como los vende
+ * Fernando. 250 g y 500 g para hogar; 1 kg y 2.5 kg para barra.
+ *
+ * Los precios son los de su lista y ya llevan el despacho dentro, así que el
+ * carrito no suma envío al final.
  *
  * Agregar un formato nuevo es agregar un objeto: las tarjetas del portafolio,
  * las fichas de lote y el formulario de muestras se actualizan solos.
@@ -24,8 +27,7 @@ export const formats: z.input<typeof FormatSchema>[] = [
       { es: "Grano / molido", en: "Whole bean / ground" },
       { es: "Café de Colombia", en: "Café de Colombia" },
     ],
-    // EDITAR: confirmar precios. Los tomé de tus piezas de campaña.
-    retailPrice: { amount: 10990, currency: "CLP" },
+    retailPrice: { amount: 11000, currency: "CLP" },
     wholesaleTiers: [
       { minQuantity: 12, unit: { amount: 9500, currency: "CLP" } },
       { minQuantity: 48, unit: { amount: 8700, currency: "CLP" } },
@@ -37,6 +39,51 @@ export const formats: z.input<typeof FormatSchema>[] = [
         en: "250 g bag of Le Coin coffee, 100% arabica from a Colombian farm",
       },
     },
+  },
+  {
+    id: "retail-500",
+    grams: 500,
+    line: "retail",
+    valve: false,
+    description: {
+      es: "Medio kilo para consumo hogareño frecuente. 100% café arábico, en grano o molido.",
+      en: "Half a kilo for regular home use. 100% arabica coffee, whole bean or ground.",
+    },
+    tags: [
+      { es: "Retail", en: "Retail" },
+      { es: "Grano / molido", en: "Whole bean / ground" },
+      { es: "Café de Colombia", en: "Café de Colombia" },
+    ],
+    retailPrice: { amount: 20000, currency: "CLP" },
+    wholesaleTiers: [
+      { minQuantity: 12, unit: { amount: 17500, currency: "CLP" } },
+      { minQuantity: 48, unit: { amount: 16000, currency: "CLP" } },
+    ],
+    // FALTA: fotografía del empaque de 500 g. Sin ella la tarjeta cae al
+    // marcador de respaldo, que se ve pobre al lado de las otras.
+  },
+  {
+    id: "horeca-1000",
+    grams: 1000,
+    line: "horeca",
+    // Del brief del cliente: los formatos de barra llevan válvula. En la foto
+    // solo pude confirmarla en el de 2.5 kg.
+    valve: true,
+    description: {
+      es: "Un kilo para barras de volumen moderado, hoteles pequeños y cartas de temporada.",
+      en: "One kilo for moderate-volume bars, small hotels and seasonal menus.",
+    },
+    tags: [
+      { es: "HoReCa", en: "HoReCa" },
+      { es: "Café & Bistro", en: "Café & Bistro" },
+      { es: "100% colombiano", en: "100% Colombian" },
+    ],
+    retailPrice: { amount: 36000, currency: "CLP" },
+    wholesaleTiers: [
+      { minQuantity: 6, unit: { amount: 33500, currency: "CLP" } },
+      { minQuantity: 15, unit: { amount: 31000, currency: "CLP" } },
+    ],
+    // FALTA: fotografía del empaque de 1 kg.
   },
   {
     id: "horeca-2500",
@@ -52,10 +99,10 @@ export const formats: z.input<typeof FormatSchema>[] = [
       { es: "Café & Bistro", en: "Café & Bistro" },
       { es: "100% colombiano", en: "100% Colombian" },
     ],
-    retailPrice: { amount: 80000, currency: "CLP" },
+    retailPrice: { amount: 86000, currency: "CLP" },
     wholesaleTiers: [
-      { minQuantity: 4, unit: { amount: 74000, currency: "CLP" } },
-      { minQuantity: 10, unit: { amount: 69000, currency: "CLP" } },
+      { minQuantity: 4, unit: { amount: 79500, currency: "CLP" } },
+      { minQuantity: 10, unit: { amount: 74000, currency: "CLP" } },
     ],
     image: {
       src: "/img/producto-2500g.webp",
