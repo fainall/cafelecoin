@@ -202,11 +202,15 @@
      corre, el velo se retira igual. La regla global de movimiento
      reducido lo apaga al instante.                                    */
   .apertura {
+    /* Único número que hay que tocar: los demás tiempos salen de éste, así que
+       la mancha teñida nunca se adelanta a la de papel. */
+    --apertura: 1.8s;
+
     position: fixed;
     inset: 0;
     z-index: 90;
     pointer-events: none;
-    animation: apertura-velo 1.2s linear forwards;
+    animation: apertura-velo var(--apertura) linear forwards;
   }
 
   .apertura__lienzo {
@@ -229,12 +233,14 @@
   .apertura__mancha {
     transform-box: view-box;
     transform-origin: 60px 60px;
-    animation: apertura-mancha 900ms cubic-bezier(0.16, 0.24, 0.3, 1) 40ms both;
+    animation: apertura-mancha calc(var(--apertura) * 0.75) cubic-bezier(0.16, 0.24, 0.3, 1)
+      calc(var(--apertura) * 0.03) both;
   }
 
+  /* Sale más tarde y tarda más: de ese desfase vive la franja húmeda. */
   .apertura__mancha--rezagada {
-    animation-duration: 980ms;
-    animation-delay: 200ms;
+    animation-duration: calc(var(--apertura) * 0.82);
+    animation-delay: calc(var(--apertura) * 0.17);
   }
 }
 
