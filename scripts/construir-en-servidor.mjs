@@ -41,8 +41,7 @@ const carga = (paquete) => {
     require(paquete);
     return "carga";
   } catch (error) {
-    return `NO CARGA: ${error.message.split("
-")[0]}`;
+    return `NO CARGA: ${error.message.split(String.fromCharCode(10))[0]}`;
   }
 };
 
@@ -66,5 +65,10 @@ if (faltantes.length > 0) {
   console.log("\nno falta ninguno: el fallo viene de otro sitio");
 }
 
-console.log("\ncompilando…");
-execSync("npx next build", { stdio: "inherit" });
+console.log("\ncomprobando que los nativos carguen de verdad:");
+for (const paquete of NATIVOS) console.log("  ", paquete, "→", carga(paquete));
+
+// webpack en vez de Turbopack: reserva bastante menos memoria de golpe, que es
+// justo lo que aquí escasea.
+console.log("\ncompilando con webpack…");
+execSync("npx next build --webpack", { stdio: "inherit" });
