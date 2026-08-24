@@ -1,6 +1,10 @@
 /**
  * Arranque para Passenger (cPanel / CloudLinux Node.js Selector).
  *
+ * No se llama server.js a proposito: al crear la aplicacion, cPanel deja su
+ * propia plantilla con ese nombre y sin seguimiento de git, y el pull se
+ * niega a sobrescribirla.
+ *
  * Passenger no ejecuta comandos, ejecuta un archivo: no puede lanzar
  * `next start`. Este archivo hace lo mismo por la vía programática, sobre la
  * salida normal de `next build`, así que no hace falta compilar en modo
