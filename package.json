@@ -13,7 +13,8 @@
     "imagenes": "node scripts/procesar-imagenes.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "verify": "pnpm typecheck && pnpm lint && pnpm test"
+    "verify": "pnpm typecheck && pnpm lint && pnpm test",
+    "servidor:build": "node scripts/construir-en-servidor.mjs"
   },
   "dependencies": {
     "next": "16.3.0",
