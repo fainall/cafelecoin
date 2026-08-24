@@ -1,3 +1,0 @@
-module.exports=[77392,a=>{"use strict";var b=a.i(62745),c=a.i(34875);a.s(["Reveal",0,function({children:a,delay:d=0,className:e="",as:f="div"}){let g=(0,c.useRef)(null),[h,i]=(0,c.useState)(!1);return(0,c.useEffect)(()=>{let a=g.current;if(!a)return;if("u"<typeof IntersectionObserver){a.dataset.visible="true";return}let b=new IntersectionObserver(a=>{for(let c of a)c.isIntersecting&&(i(!0),b.disconnect())},{rootMargin:"0px 0px -12% 0px",threshold:.08});return b.observe(a),()=>b.disconnect()},[]),(0,b.jsx)(f,{ref:g,className:`reveal ${e}`,"data-visible":h?"true":"false",style:{"--reveal-delay":`${d}ms`},children:a})}])}];
-
-//# sourceMappingURL=src_components_ui_reveal_tsx_0o75zfl._.js.map
