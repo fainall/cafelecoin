@@ -30,6 +30,22 @@ const resuelve = (paquete) => {
   }
 };
 
+/**
+ * Que el paquete exista no basta: el .node puede estar ahí y negarse a cargar
+ * —glibc vieja, instrucciones que el procesador no tiene—, y entonces la
+ * librería cae a WebAssembly sin decir por qué. Cargarlo de verdad es la
+ * única comprobación que vale.
+ */
+const carga = (paquete) => {
+  try {
+    require(paquete);
+    return "carga";
+  } catch (error) {
+    return `NO CARGA: ${error.message.split("
+")[0]}`;
+  }
+};
+
 console.log("plataforma:", process.platform, process.arch, "· node", process.version);
 
 const faltantes = NATIVOS.filter((paquete) => {
