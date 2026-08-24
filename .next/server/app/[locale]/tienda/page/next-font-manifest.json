@@ -1,0 +1,13 @@
+{
+  "pages": {},
+  "app": {
+    "[project]/src/app/[locale]/tienda/page": [
+      "static/media/cc014fcb166cf364-s.p.2cu9iw-l3ih8o.woff2",
+      "static/media/8bd76523131fa0fc-s.p.1pvupmngxrt5z.woff2",
+      "static/media/01e4147cff8141ee-s.p.3huc2loe0ie8a.woff2",
+      "static/media/75affa71d1e2f6a7-s.p.17-aodiw50953.woff2"
+    ]
+  },
+  "appUsingSizeAdjust": true,
+  "pagesUsingSizeAdjust": false
+}

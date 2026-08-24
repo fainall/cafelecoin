@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<url>
+<loc>https://lecoin.opusdigital.cl/es</loc>
+<xhtml:link rel="alternate" hreflang="es" href="https://lecoin.opusdigital.cl/es" />
+<xhtml:link rel="alternate" hreflang="en" href="https://lecoin.opusdigital.cl/en" />
+<lastmod>2026-08-24T22:38:28.040Z</lastmod>
+<changefreq>monthly</changefreq>
+<priority>1</priority>
+</url>
+<url>
+<loc>https://lecoin.opusdigital.cl/en</loc>
+<xhtml:link rel="alternate" hreflang="es" href="https://lecoin.opusdigital.cl/es" />
+<xhtml:link rel="alternate" hreflang="en" href="https://lecoin.opusdigital.cl/en" />
+<lastmod>2026-08-24T22:38:28.040Z</lastmod>
+<changefreq>monthly</changefreq>
+<priority>1</priority>
+</url>
+<url>
+<loc>https://lecoin.opusdigital.cl/es/cafe/manizales-lavado</loc>
+<xhtml:link rel="alternate" hreflang="es" href="https://lecoin.opusdigital.cl/es/cafe/manizales-lavado" />
+<xhtml:link rel="alternate" hreflang="en" href="https://lecoin.opusdigital.cl/en/cafe/manizales-lavado" />
+<lastmod>2026-08-24T22:38:28.040Z</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.8</priority>
+</url>
+<url>
+<loc>https://lecoin.opusdigital.cl/en/cafe/manizales-lavado</loc>
+<xhtml:link rel="alternate" hreflang="es" href="https://lecoin.opusdigital.cl/es/cafe/manizales-lavado" />
+<xhtml:link rel="alternate" hreflang="en" href="https://lecoin.opusdigital.cl/en/cafe/manizales-lavado" />
+<lastmod>2026-08-24T22:38:28.040Z</lastmod>
+<changefreq>monthly</changefreq>
+<priority>0.8</priority>
+</url>
+</urlset>
