@@ -53,6 +53,15 @@ export const webhookLeadStore: LeadStore = {
   },
 };
 
+/** Redis por su API HTTP: duradero y legible desde el panel. */
+export const redisLeadStore: LeadStore = {
+  name: "redis",
+  async save(lead) {
+    const { redisPush } = await import("@/lib/admin/repositorio");
+    await redisPush("leads", lead);
+  },
+};
+
 /** Notificación por correo vía Resend (sin SDK: solo su API HTTP). */
 export const emailLeadStore: LeadStore = {
   name: "email",
@@ -116,6 +125,7 @@ function escapeHtml(value: string): string {
 const registry: Record<string, LeadStore> = {
   console: consoleLeadStore,
   file: fileLeadStore,
+  redis: redisLeadStore,
   webhook: webhookLeadStore,
   email: emailLeadStore,
 };
@@ -154,7 +164,8 @@ export function getLeadStore(): LeadStore {
 
   // En Vercel el disco es de solo lectura, así que "file" siempre fallaría:
   // ahí el valor por defecto no lo incluye.
-  const porDefecto = process.env.VERCEL ? "console" : "file,console";
+  const hayRedis = Boolean(process.env.KV_REST_API_URL ?? process.env.UPSTASH_REDIS_REST_URL);
+  const porDefecto = hayRedis ? "redis,console" : process.env.VERCEL ? "console" : "file,console";
 
   const requested = (process.env.LEADS_STORE ?? porDefecto)
     .split(",")

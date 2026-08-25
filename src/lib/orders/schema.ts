@@ -56,7 +56,15 @@ export interface OrderItem {
   subtotal: Money;
 }
 
-export type OrderStatus = "pendiente" | "pagado" | "cancelado";
+/** Vida de un pedido, en el orden en que ocurre. */
+export const orderStatuses = [
+  "pendiente",
+  "pagado",
+  "despachado",
+  "entregado",
+  "cancelado",
+] as const;
+export type OrderStatus = (typeof orderStatuses)[number];
 
 export interface StoredOrder extends Omit<OrderInput, "website" | "lines"> {
   /** Código legible que el comprador puede citar: LC-XXXXXX. */

@@ -21,7 +21,7 @@ export default function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // Todo salvo API, estáticos de Next y archivos con extensión.
-    "/((?!api|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|.*\\..*).*)",
+    // Todo salvo API, panel, estáticos de Next y archivos con extensión.
+    "/((?!api|admin|_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|.*\\..*).*)",
   ],
 };

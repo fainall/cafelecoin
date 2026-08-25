@@ -52,6 +52,15 @@ export const webhookOrderStore: OrderStore = {
   },
 };
 
+/** Redis por su API HTTP: el único destino duradero que además se puede leer. */
+export const redisOrderStore: OrderStore = {
+  name: "redis",
+  async save(order) {
+    const { redisPush } = await import("@/lib/admin/repositorio");
+    await redisPush("orders", order);
+  },
+};
+
 /** Aviso por correo vía Resend, para que el pedido llegue a alguien. */
 export const emailOrderStore: OrderStore = {
   name: "email",
@@ -109,6 +118,7 @@ function escapeHtml(value: string): string {
 const registro: Record<string, OrderStore> = {
   console: consoleOrderStore,
   file: fileOrderStore,
+  redis: redisOrderStore,
   webhook: webhookOrderStore,
   email: emailOrderStore,
 };
@@ -138,7 +148,9 @@ let cache: OrderStore | null = null;
 export function getOrderStore(): OrderStore {
   if (cache) return cache;
 
-  const porDefecto = process.env.VERCEL ? "console" : "file,console";
+  // Con Redis configurado se usa solo: es el que alimenta el panel.
+  const hayRedis = Boolean(process.env.KV_REST_API_URL ?? process.env.UPSTASH_REDIS_REST_URL);
+  const porDefecto = hayRedis ? "redis,console" : process.env.VERCEL ? "console" : "file,console";
   const pedidos = (process.env.ORDERS_STORE ?? porDefecto)
     .split(",")
     .map((name) => name.trim())
