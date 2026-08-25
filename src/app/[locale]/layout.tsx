@@ -10,7 +10,12 @@ import { SiteHeader } from "@/components/layout/site-header";
 import { WhatsAppFab } from "@/components/layout/whatsapp-fab";
 import { Apertura } from "@/components/ui/apertura";
 import { content } from "@/content";
-import { getPrimaryPhone, productRequestMessage, whatsappUrl } from "@/content/helpers";
+import {
+  getPrimaryPhone,
+  instagramUrl,
+  productRequestMessage,
+  whatsappUrl,
+} from "@/content/helpers";
 import { getDictionary } from "@/i18n";
 import { isLocale, locales, localeTags, type Locale } from "@/i18n/config";
 import { CartProvider } from "@/lib/cart/store";
@@ -131,6 +136,8 @@ export default async function LocaleLayout({
             menuLabel={dictionary.nav.menu}
             skipLabel={dictionary.nav.skipToContent}
             cartLabel={dictionary.cart.open}
+            instagramHref={instagramUrl(contact)}
+            instagramHandle={`@${contact.instagram}`}
           />
 
           <main id="contenido">{children}</main>

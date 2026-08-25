@@ -22,6 +22,26 @@ interface SiteHeaderProps {
   menuLabel: string;
   skipLabel: string;
   cartLabel: string;
+  /** Perfil de Instagram, al pie del menú abierto. */
+  instagramHref: string;
+  instagramHandle: string;
+}
+
+/** Glifo de Instagram: el cuadro, la lente y el punto del flash. */
+function InstagramGlyph() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className="h-4 w-4"
+      fill="none"
+      stroke="currentColor"
+      aria-hidden="true"
+    >
+      <rect x="3" y="3" width="18" height="18" rx="5" strokeWidth="1.3" />
+      <circle cx="12" cy="12" r="4" strokeWidth="1.3" />
+      <circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none" />
+    </svg>
+  );
 }
 
 /**
@@ -37,6 +57,8 @@ export function SiteHeader({
   menuLabel,
   skipLabel,
   cartLabel,
+  instagramHref,
+  instagramHandle,
 }: SiteHeaderProps) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -141,6 +163,17 @@ export function SiteHeader({
           className="border-gold/50 text-gold-light hover:bg-gold hover:text-forest-deep font-display mt-10 border px-9 py-4 text-[0.72rem] tracking-[0.22em] uppercase transition-colors"
         >
           {ctaLabel}
+        </a>
+
+        <a
+          href={instagramHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => setOpen(false)}
+          className="label text-cream-faint hover:text-gold-light mt-10 flex items-center gap-2.5 transition-colors"
+        >
+          <InstagramGlyph />
+          {instagramHandle}
         </a>
       </div>
     </>
