@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect } from "react";
 
 import { formatWeight } from "@/content/helpers";
@@ -156,14 +157,13 @@ export function CartDrawer({ dictionary, locale }: CartDrawerProps) {
 
             <p className="text-cream-faint mt-4 text-sm">{t.shippingNote}</p>
 
-            <button
-              type="button"
-              disabled
-              title="Disponible al conectar Mercado Pago"
-              className="bg-gold text-forest-deep font-display mt-5 w-full px-9 py-4 text-[0.72rem] tracking-[0.22em] uppercase disabled:cursor-not-allowed disabled:opacity-50"
+            <Link
+              href={`/${locale}/checkout`}
+              onClick={() => setOpen(false)}
+              className="bg-gold text-forest-deep font-display hover:bg-gold-light mt-5 block w-full px-9 py-4 text-center text-[0.72rem] tracking-[0.22em] uppercase transition-colors"
             >
               {t.checkout}
-            </button>
+            </Link>
 
             <a
               href={quoteHref(
