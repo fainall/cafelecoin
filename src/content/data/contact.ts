@@ -4,15 +4,17 @@ import type { ContactSchema } from "../schema";
 /**
  * Datos de contacto de la marca.
  * El correo y el dominio salen de la etiqueta trasera del empaque.
- * EDITAR: usuario real de Instagram (el del empaque no es legible).
+ *
+ * El teléfono principal es el chileno: es el mercado donde se vende, y es el
+ * número que atiende los pedidos de la tienda.
  */
 export const contact: z.input<typeof ContactSchema> = {
   brand: "Le Coin",
   legalName: "Café Le Coin",
   email: "info@lecoin.cl",
-  instagram: "cafelecoin",
+  instagram: "cafelecoin.tienda",
   siteUrl: "https://www.lecoin.cl",
-  primaryPhoneId: "co",
+  primaryPhoneId: "cl",
   phones: [
     {
       id: "co",

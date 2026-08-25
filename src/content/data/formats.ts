@@ -9,7 +9,7 @@ import type { FormatSchema } from "../schema";
  * carrito no suma envío al final.
  *
  * Agregar un formato nuevo es agregar un objeto: las tarjetas del portafolio,
- * las fichas de lote y el formulario de muestras se actualizan solos.
+ * las fichas de lote y el formulario de productos se actualizan solos.
  * EDITAR: unidades por caja reales y código de barras por formato.
  */
 export const formats: z.input<typeof FormatSchema>[] = [

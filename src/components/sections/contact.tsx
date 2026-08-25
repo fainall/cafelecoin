@@ -4,13 +4,13 @@ import {
   formatWeight,
   instagramUrl,
   mailtoUrl,
-  sampleRequestMessage,
+  productRequestMessage,
   whatsappUrl,
 } from "@/content/helpers";
 import type { Contact as ContactInfo, Estate, Format } from "@/content/schema";
 import type { Dictionary } from "@/i18n";
 import { translate, type Locale } from "@/i18n/config";
-import { SampleRequestForm } from "@/components/forms/sample-request-form";
+import { ProductRequestForm } from "@/components/forms/product-request-form";
 import { Reveal } from "@/components/ui/reveal";
 import { Section, SectionHeading } from "@/components/ui/section";
 
@@ -33,7 +33,7 @@ export function Contact({
   lotSlug,
   lotName,
 }: ContactProps) {
-  const message = sampleRequestMessage(locale, lotName);
+  const message = productRequestMessage(locale, lotName);
 
   const channels = [
     ...contact.phones.map((phone) => ({
@@ -47,7 +47,7 @@ export function Contact({
       value: contact.email,
       href: mailtoUrl(
         contact,
-        locale === "en" ? "Sample request — Le Coin" : "Solicitud de muestras — Le Coin",
+        locale === "en" ? "Product request — Le Coin" : "Solicitud de productos — Le Coin",
       ),
       external: false,
     },
@@ -77,7 +77,7 @@ export function Contact({
           {/* useSearchParams necesita frontera de Suspense: la página es
               estática y el formulario lee la preselección en el navegador. */}
           <Suspense fallback={<div className="min-h-[32rem]" />}>
-            <SampleRequestForm
+            <ProductRequestForm
               dictionary={dictionary}
               locale={locale}
               lotSlug={lotSlug}

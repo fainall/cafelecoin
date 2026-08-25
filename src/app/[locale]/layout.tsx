@@ -10,7 +10,7 @@ import { SiteHeader } from "@/components/layout/site-header";
 import { WhatsAppFab } from "@/components/layout/whatsapp-fab";
 import { Apertura } from "@/components/ui/apertura";
 import { content } from "@/content";
-import { getPrimaryPhone, sampleRequestMessage, whatsappUrl } from "@/content/helpers";
+import { getPrimaryPhone, productRequestMessage, whatsappUrl } from "@/content/helpers";
 import { getDictionary } from "@/i18n";
 import { isLocale, locales, localeTags, type Locale } from "@/i18n/config";
 import { CartProvider } from "@/lib/cart/store";
@@ -100,7 +100,7 @@ export default async function LocaleLayout({
     content.getFormats(),
   ]);
   const phone = getPrimaryPhone(contact);
-  const whatsapp = whatsappUrl(phone, sampleRequestMessage(locale));
+  const whatsapp = whatsappUrl(phone, productRequestMessage(locale));
 
   const navItems = [
     { href: `/${locale}/tienda`, label: dictionary.nav.shop },

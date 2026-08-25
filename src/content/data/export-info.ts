@@ -115,8 +115,8 @@ export const exportInfo: z.input<typeof ExportInfoSchema> = {
       en: "Shipping coordination and export documentation.",
     },
     {
-      es: "Muestras de catación despachadas a solicitud.",
-      en: "Cupping samples dispatched on request.",
+      es: "Despacho a todo Chile con el envío incluido en el precio.",
+      en: "Delivery anywhere in Chile with shipping included in the price.",
     },
   ],
 };

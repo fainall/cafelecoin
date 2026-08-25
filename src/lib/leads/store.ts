@@ -93,8 +93,8 @@ export const emailLeadStore: LeadStore = {
         from,
         to: to.split(",").map((address) => address.trim()),
         reply_to: lead.email,
-        subject: `Solicitud de muestras — ${lead.company}`,
-        html: `<h2>Nueva solicitud de muestras</h2><table>${rows}</table><p>${lead.id} · ${lead.receivedAt}</p>`,
+        subject: `Solicitud de productos — ${lead.company}`,
+        html: `<h2>Nueva solicitud de productos</h2><table>${rows}</table><p>${lead.id} · ${lead.receivedAt}</p>`,
       }),
     });
     if (!response.ok) {

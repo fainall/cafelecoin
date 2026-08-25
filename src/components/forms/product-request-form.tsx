@@ -14,7 +14,7 @@ export interface FormatOption {
   label: string;
 }
 
-interface SampleRequestFormProps {
+interface ProductRequestFormProps {
   dictionary: Dictionary;
   locale: Locale;
   formats: FormatOption[];
@@ -28,12 +28,12 @@ const fieldClass =
   "w-full border-b border-forest-line bg-transparent py-3 font-sans text-sm text-cream placeholder:text-cream-faint focus:border-gold focus:outline-none transition-colors";
 const labelClass = "label text-cream-faint";
 
-export function SampleRequestForm({
+export function ProductRequestForm({
   dictionary,
   locale,
   formats,
   lotSlug,
-}: SampleRequestFormProps) {
+}: ProductRequestFormProps) {
   const t = dictionary.form;
   // Quien llega desde la tienda trae sus formatos en la URL: se marcan solos.
   const preseleccion = readQuoteFormats(useSearchParams());

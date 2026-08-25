@@ -55,14 +55,14 @@ export function lotPath(locale: Locale, lot: Pick<Lot, "slug">): string {
   return `/${locale}/cafe/${lot.slug}`;
 }
 
-/** Mensaje precargado de WhatsApp para los CTA de muestras. */
-export function sampleRequestMessage(locale: Locale, lotName?: string): string {
+/** Mensaje precargado de WhatsApp para los CTA de productos. */
+export function productRequestMessage(locale: Locale, lotName?: string): string {
   if (locale === "en") {
     return lotName
-      ? `Hello Le Coin, I would like to request cupping samples of ${lotName}.`
-      : "Hello Le Coin, I would like to request cupping samples.";
+      ? `Hello Le Coin, I would like to ask about ${lotName}.`
+      : "Hello Le Coin, I would like to ask about your coffee.";
   }
   return lotName
-    ? `Hola Le Coin, quisiera solicitar muestras para catación del lote ${lotName}.`
-    : "Hola Le Coin, quisiera solicitar muestras para catación.";
+    ? `Hola Le Coin, quisiera consultar por el lote ${lotName}.`
+    : "Hola Le Coin, quisiera consultar por sus productos.";
 }
