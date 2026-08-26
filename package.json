@@ -16,7 +16,8 @@
     "verify": "pnpm typecheck && pnpm lint && pnpm test",
     "servidor:build": "node scripts/construir-en-servidor.mjs",
     "servidor:arranque": "node scripts/instalar-arranque.mjs",
-    "servidor:diagnostico": "node scripts/diagnostico-arranque.mjs"
+    "servidor:diagnostico": "node scripts/diagnostico-arranque.mjs",
+    "favicon": "node scripts/generar-favicon.mjs"
   },
   "dependencies": {
     "next": "16.3.0",
