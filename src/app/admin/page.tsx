@@ -4,6 +4,8 @@ import { cookies } from "next/headers";
 import { PanelAdmin } from "@/components/admin/panel";
 import { Acceso } from "@/components/admin/acceso";
 import { getAdminRepository } from "@/lib/admin/repositorio";
+import { buzonConfig, buzonHabilitado } from "@/lib/correo/buzon";
+import { correoHabilitado } from "@/lib/correo/cpanel";
 import { adminHabilitado, COOKIE, sesionValida } from "@/lib/admin/sesion";
 
 export const dynamic = "force-dynamic";
@@ -40,7 +42,19 @@ export default async function AdminPage() {
     repositorio.listLeads(),
   ]);
 
-  return <PanelAdmin pedidos={pedidos} solicitudes={solicitudes} backend={repositorio.backend} />;
+  return (
+    <PanelAdmin
+      pedidos={pedidos}
+      solicitudes={solicitudes}
+      backend={repositorio.backend}
+      correo={{
+        gestionActiva: correoHabilitado(),
+        buzonActivo: buzonHabilitado(),
+        dominio: process.env.CORREO_DOMINIO ?? "lecoin.cl",
+        casilla: buzonConfig()?.usuario ?? "",
+      }}
+    />
+  );
 }
 
 function Aviso({ titulo, children }: { titulo: string; children: React.ReactNode }) {
