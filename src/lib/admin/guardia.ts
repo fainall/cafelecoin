@@ -13,6 +13,6 @@ import { COOKIE, sesionValida } from "./sesion";
  */
 export async function exigirSesion(): Promise<NextResponse | null> {
   const galleta = (await cookies()).get(COOKIE)?.value;
-  if (sesionValida(galleta)) return null;
+  if (await sesionValida(galleta)) return null;
   return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
 }

@@ -26,11 +26,11 @@ export async function POST(request: Request) {
   const cuerpo = (await request.json().catch(() => null)) as { password?: unknown } | null;
   const password = typeof cuerpo?.password === "string" ? cuerpo.password : "";
 
-  if (!comprobarPassword(password)) {
+  if (!(await comprobarPassword(password))) {
     return NextResponse.json({ ok: false, error: "bad_password" }, { status: 401 });
   }
 
-  const sesion = crearSesion();
+  const sesion = await crearSesion();
   const respuesta = NextResponse.json({ ok: true });
   respuesta.cookies.set(COOKIE, sesion.value, {
     httpOnly: true,

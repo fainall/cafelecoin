@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
 /** Cambia el estado de un pedido: pagado, despachado, entregado, cancelado. */
 export async function PATCH(request: Request) {
   const galleta = (await cookies()).get(COOKIE)?.value;
-  if (!sesionValida(galleta)) {
+  if (!(await sesionValida(galleta))) {
     return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
   }
 

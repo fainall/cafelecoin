@@ -6,7 +6,12 @@ import { Acceso } from "@/components/admin/acceso";
 import { getAdminRepository } from "@/lib/admin/repositorio";
 import { buzonConfig, buzonHabilitado } from "@/lib/correo/buzon";
 import { correoHabilitado } from "@/lib/correo/cpanel";
-import { adminHabilitado, COOKIE, sesionValida } from "@/lib/admin/sesion";
+import {
+  adminHabilitado,
+  COOKIE,
+  puedeCambiarPassword,
+  sesionValida,
+} from "@/lib/admin/sesion";
 
 export const dynamic = "force-dynamic";
 
@@ -34,7 +39,7 @@ export default async function AdminPage() {
   }
 
   const galleta = (await cookies()).get(COOKIE)?.value;
-  if (!sesionValida(galleta)) return <Acceso />;
+  if (!(await sesionValida(galleta))) return <Acceso />;
 
   const repositorio = getAdminRepository();
   const [pedidos, solicitudes] = await Promise.all([
@@ -47,6 +52,7 @@ export default async function AdminPage() {
       pedidos={pedidos}
       solicitudes={solicitudes}
       backend={repositorio.backend}
+      puedeCambiarPassword={puedeCambiarPassword()}
       correo={{
         gestionActiva: correoHabilitado(),
         buzonActivo: buzonHabilitado(),

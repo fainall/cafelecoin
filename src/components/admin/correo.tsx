@@ -329,7 +329,6 @@ function Casillas({ dominio }: { dominio: string }) {
     return () => {
       vivo = false;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const cargar = async () => aplicar(await pedir());

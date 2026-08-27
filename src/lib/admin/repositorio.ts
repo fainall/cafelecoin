@@ -23,6 +23,10 @@ export interface AdminRepository {
   listOrders(): Promise<StoredOrder[]>;
   listLeads(): Promise<StoredLead[]>;
   setOrderStatus(code: string, status: OrderStatus): Promise<boolean>;
+  /** Ajustes que el panel guarda de sí mismo, como la contraseña. */
+  leerAjuste(clave: string): Promise<string | null>;
+  /** Devuelve false cuando no hay dónde escribir; el panel lo dice en pantalla. */
+  guardarAjuste(clave: string, valor: string): Promise<boolean>;
 }
 
 /* ──────────────────────────────── Redis ──────────────────────────────── */
@@ -57,6 +61,9 @@ async function redisCommand<T>(config: RedisConfig, command: (string | number)[]
 
 /** Clave de la lista donde se acumula cada colección. */
 export const REDIS_KEYS = { orders: "lecoin:pedidos", leads: "lecoin:solicitudes" } as const;
+
+/** Los ajustes son claves sueltas, no listas. */
+const claveAjuste = (clave: string) => "lecoin:ajustes:" + clave;
 
 export async function redisPush(coleccion: keyof typeof REDIS_KEYS, valor: unknown): Promise<void> {
   const config = redisConfig();
@@ -120,6 +127,15 @@ export function getAdminRepository(): AdminRepository {
         ]);
         return true;
       },
+
+      async leerAjuste(clave) {
+        return redisCommand<string | null>(config, ["GET", claveAjuste(clave)]);
+      },
+
+      async guardarAjuste(clave, valor) {
+        await redisCommand(config, ["SET", claveAjuste(clave), valor]);
+        return true;
+      },
     };
   }
 
@@ -137,6 +153,12 @@ export function getAdminRepository(): AdminRepository {
         return [];
       },
       async setOrderStatus() {
+        return false;
+      },
+      async leerAjuste() {
+        return null;
+      },
+      async guardarAjuste() {
         return false;
       },
     };
@@ -167,5 +189,36 @@ export function getAdminRepository(): AdminRepository {
       await writeFile(ruta, actualizados.map((p) => JSON.stringify(p)).join("\n") + "\n", "utf8");
       return true;
     },
+
+    async leerAjuste(clave) {
+      return (await leerAjustes())[clave] ?? null;
+    },
+
+    async guardarAjuste(clave, valor) {
+      const { writeFile, mkdir } = await import("node:fs/promises");
+      const path = await import("node:path");
+
+      const ruta = await rutaAjustes();
+      const ajustes = await leerAjustes();
+      ajustes[clave] = valor;
+
+      await mkdir(path.dirname(ruta), { recursive: true });
+      await writeFile(ruta, JSON.stringify(ajustes, null, 2), "utf8");
+      return true;
+    },
   };
+}
+
+async function rutaAjustes(): Promise<string> {
+  const path = await import("node:path");
+  return path.join(process.cwd(), ".data", "ajustes.json");
+}
+
+async function leerAjustes(): Promise<Record<string, string>> {
+  const { readFile } = await import("node:fs/promises");
+  try {
+    return JSON.parse(await readFile(await rutaAjustes(), "utf8")) as Record<string, string>;
+  } catch {
+    return {};
+  }
 }

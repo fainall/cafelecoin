@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 
 import { Correo } from "./correo";
+import { Cuenta } from "./cuenta";
 import type { Backend } from "@/lib/admin/repositorio";
 import type { StoredLead } from "@/lib/leads/schema";
 import { orderStatuses, type OrderStatus, type StoredOrder } from "@/lib/orders/schema";
@@ -11,6 +12,7 @@ interface PanelAdminProps {
   pedidos: StoredOrder[];
   solicitudes: StoredLead[];
   backend: Backend;
+  puedeCambiarPassword: boolean;
   correo: {
     gestionActiva: boolean;
     buzonActivo: boolean;
@@ -47,8 +49,14 @@ const fecha = (iso: string) =>
 const plata = (monto: number, moneda: string) =>
   `${moneda === "CLP" || moneda === "COP" ? "$" : ""}${monto.toLocaleString("es-CL")}`;
 
-export function PanelAdmin({ pedidos, solicitudes, backend, correo }: PanelAdminProps) {
-  const [vista, setVista] = useState<"pedidos" | "solicitudes" | "correo">("pedidos");
+export function PanelAdmin({
+  pedidos,
+  solicitudes,
+  backend,
+  correo,
+  puedeCambiarPassword,
+}: PanelAdminProps) {
+  const [vista, setVista] = useState<"pedidos" | "solicitudes" | "correo" | "cuenta">("pedidos");
   const [estados, setEstados] = useState<Record<string, OrderStatus>>({});
   const [guardando, setGuardando] = useState<string | null>(null);
 
@@ -123,7 +131,7 @@ export function PanelAdmin({ pedidos, solicitudes, backend, correo }: PanelAdmin
         </div>
 
         <nav className="border-forest-line mt-10 flex gap-8 border-b">
-          {(["pedidos", "solicitudes", "correo"] as const).map((cual) => (
+          {(["pedidos", "solicitudes", "correo", "cuenta"] as const).map((cual) => (
             <button
               key={cual}
               onClick={() => setVista(cual)}
@@ -134,7 +142,9 @@ export function PanelAdmin({ pedidos, solicitudes, backend, correo }: PanelAdmin
                 ? `Pedidos (${pedidos.length})`
                 : cual === "solicitudes"
                   ? `Solicitudes (${solicitudes.length})`
-                  : "Correo"}
+                  : cual === "correo"
+                    ? "Correo"
+                    : "Cuenta"}
             </button>
           ))}
         </nav>
@@ -149,6 +159,7 @@ export function PanelAdmin({ pedidos, solicitudes, backend, correo }: PanelAdmin
         )}
         {vista === "solicitudes" && <ListaSolicitudes solicitudes={solicitudes} />}
         {vista === "correo" && <Correo {...correo} />}
+        {vista === "cuenta" && <Cuenta puedeCambiar={puedeCambiarPassword} />}
       </div>
     </main>
   );
