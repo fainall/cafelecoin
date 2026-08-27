@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { exigirSesion } from "@/lib/admin/guardia";
+import { casilleroDe, exigirSesion } from "@/lib/admin/guardia";
 import { enviarCorreo } from "@/lib/correo/buzon";
 
 export const runtime = "nodejs";
@@ -8,8 +8,13 @@ export const dynamic = "force-dynamic";
 export const maxDuration = 30;
 
 export async function POST(request: Request) {
-  const rechazo = await exigirSesion();
+  const { sesion, rechazo } = await exigirSesion();
   if (rechazo) return rechazo;
+
+  const casillero = casilleroDe(sesion);
+  if (!casillero) {
+    return NextResponse.json({ ok: false, error: "sin_casilla" }, { status: 503 });
+  }
 
   const cuerpo = (await request.json().catch(() => null)) as {
     para?: unknown;
@@ -29,7 +34,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const id = await enviarCorreo({ para, asunto, cuerpo: texto });
+    const id = await enviarCorreo(casillero, { para, asunto, cuerpo: texto });
     return NextResponse.json({ ok: true, id });
   } catch (error) {
     console.error("[correo] no se pudo enviar", error);

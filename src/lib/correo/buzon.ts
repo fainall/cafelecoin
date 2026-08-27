@@ -10,10 +10,12 @@ import nodemailer from "nodemailer";
  * SMTP no son APIs HTTP, son protocolos con estado sobre TCP. Escribirlos a
  * mano sería reimplementar dos clientes de correo enteros.
  *
- * El panel atiende UNA casilla —la de ventas—, no todas. Leer un buzón exige
- * su contraseña, y tener las de todas las cuentas guardadas sería convertir
- * esta variable de entorno en un llavero. Las demás casillas se crean desde
- * el panel y se leen desde el webmail de cPanel o el móvil, como siempre.
+ * Cada llamada trae la casilla que va a abrir. El administrador usa la del
+ * entorno; un empleado, la suya, que llega desde su sesión. Nadie lee la
+ * bandeja de otro porque nadie tiene la contraseña de otro: quien decide es
+ * el servidor de correo al autenticar, no este código.
+ *
+ * El servidor y los puertos sí son del entorno: son los mismos para todos.
  */
 
 export interface MensajeResumen {
@@ -29,44 +31,56 @@ export interface MensajeCompleto extends MensajeResumen {
   cuerpo: string;
 }
 
-interface BuzonConfig {
-  host: string;
+/** La casilla que se va a abrir en esta llamada. */
+export interface Casillero {
   usuario: string;
   password: string;
+}
+
+interface Servidor {
+  host: string;
   imapPuerto: number;
   smtpPuerto: number;
 }
 
-export function buzonConfig(): BuzonConfig | null {
+function servidor(): Servidor | null {
   const host = process.env.CORREO_HOST;
-  const usuario = process.env.CORREO_USUARIO;
-  const password = process.env.CORREO_PASSWORD;
-
-  if (!host || !usuario || !password) return null;
+  if (!host) return null;
 
   return {
     host,
-    usuario,
-    password,
     imapPuerto: Number(process.env.CORREO_IMAP_PUERTO ?? 993),
     smtpPuerto: Number(process.env.CORREO_SMTP_PUERTO ?? 465),
   };
 }
 
-export const buzonHabilitado = () => buzonConfig() !== null;
+/** La casilla del administrador, la de siempre, desde el entorno. */
+export function casilleroDelEntorno(): Casillero | null {
+  const usuario = process.env.CORREO_USUARIO;
+  const password = process.env.CORREO_PASSWORD;
+  return usuario && password ? { usuario, password } : null;
+}
+
+export const buzonHabilitado = () => servidor() !== null && casilleroDelEntorno() !== null;
+
+/** Un empleado solo necesita el servidor: su casilla la trae él. */
+export const servidorHabilitado = () => servidor() !== null;
 
 /* ──────────────────────────────── Recibir ──────────────────────────────── */
 
 /** Abre, hace lo suyo y cierra. En serverless no hay conexión que reutilizar. */
 async function conIMAP<T>(
-  config: BuzonConfig,
+  casillero: Casillero,
   tarea: (cliente: ImapFlow) => Promise<T>,
 ): Promise<T> {
+  const donde = servidor();
+  if (!donde) throw new Error("El servidor de correo no está configurado");
+
   const cliente = new ImapFlow({
-    host: config.host,
-    port: config.imapPuerto,
+    host: donde.host,
+    port: donde.imapPuerto,
     secure: true,
-    auth: { user: config.usuario, pass: config.password },
+    auth: { user: casillero.usuario, pass: casillero.password },
     logger: false,
   });
 
@@ -81,11 +95,8 @@ async function conIMAP<T>(
 const texto = (valor: unknown): string => (typeof valor === "string" ? valor : "");
 
 /** Los últimos mensajes, del más nuevo al más viejo. */
-export async function leerBandeja(limite = 25): Promise<MensajeResumen[]> {
-  const config = buzonConfig();
-  if (!config) throw new Error("El buzón no está configurado");
-
-  return conIMAP(config, async (cliente) => {
+export async function leerBandeja(casillero: Casillero, limite = 25): Promise<MensajeResumen[]> {
+  return conIMAP(casillero, async (cliente) => {
     const cerrojo = await cliente.getMailboxLock("INBOX");
     try {
       const buzon = cliente.mailbox;
@@ -121,11 +132,11 @@ export async function leerBandeja(limite = 25): Promise<MensajeResumen[]> {
 }
 
 /** Un mensaje entero. Leerlo lo marca como leído, como haría cualquier cliente. */
-export async function leerMensaje(uid: number): Promise<MensajeCompleto | null> {
-  const config = buzonConfig();
-  if (!config) throw new Error("El buzón no está configurado");
-
-  return conIMAP(config, async (cliente) => {
+export async function leerMensaje(
+  casillero: Casillero,
+  uid: number,
+): Promise<MensajeCompleto | null> {
+  return conIMAP(casillero, async (cliente) => {
     const cerrojo = await cliente.getMailboxLock("INBOX");
     try {
       const mensaje = await cliente.fetchOne(String(uid), {
@@ -197,23 +208,42 @@ export interface Envio {
   cuerpo: string;
 }
 
-export async function enviarCorreo({ para, asunto, cuerpo }: Envio): Promise<string> {
-  const config = buzonConfig();
-  if (!config) throw new Error("El buzón no está configurado");
+export async function enviarCorreo(
+  casillero: Casillero,
+  { para, asunto, cuerpo }: Envio,
+): Promise<string> {
+  const donde = servidor();
+  if (!donde) throw new Error("El servidor de correo no está configurado");
 
   const transporte = nodemailer.createTransport({
-    host: config.host,
-    port: config.smtpPuerto,
-    secure: config.smtpPuerto === 465,
-    auth: { user: config.usuario, pass: config.password },
+    host: donde.host,
+    port: donde.smtpPuerto,
+    secure: donde.smtpPuerto === 465,
+    auth: { user: casillero.usuario, pass: casillero.password },
   });
 
   const resultado = await transporte.sendMail({
-    from: config.usuario,
+    from: casillero.usuario,
     to: para,
     subject: asunto,
     text: cuerpo,
   });
 
   return resultado.messageId;
+}
+
+/* ─────────────────────────────── Verificar ─────────────────────────────── */
+
+/**
+ * ¿Son válidas estas credenciales? Se pregunta conectando: el servidor de
+ * correo es la única autoridad sobre eso, y así el panel no guarda ni compara
+ * contraseñas de buzón por su cuenta.
+ */
+export async function credencialesValidas(casillero: Casillero): Promise<boolean> {
+  try {
+    await conIMAP(casillero, async () => undefined);
+    return true;
+  } catch {
+    return false;
+  }
 }

@@ -1,10 +1,21 @@
 import { NextResponse } from "next/server";
 
-import { adminHabilitado, comprobarPassword, COOKIE, crearSesion } from "@/lib/admin/sesion";
+import { estaEnEquipo, normalizar } from "@/lib/admin/equipo";
+import {
+  adminHabilitado,
+  comprobarPassword,
+  COOKIE,
+  crearSesionAdmin,
+  crearSesionEmpleado,
+  type CookieSesion,
+} from "@/lib/admin/sesion";
+import { credencialesValidas, servidorHabilitado } from "@/lib/correo/buzon";
 import { clientIp, createMemoryRateLimiter } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+// Validar a un empleado abre una conexión IMAP: no es instantáneo.
+export const maxDuration = 30;
 
 // Cinco intentos cada cuarto de hora: suficiente para el despiste de quien
 // gestiona la tienda, inútil para probar contraseñas a ciegas.
@@ -23,14 +34,19 @@ export async function POST(request: Request) {
     );
   }
 
-  const cuerpo = (await request.json().catch(() => null)) as { password?: unknown } | null;
-  const password = typeof cuerpo?.password === "string" ? cuerpo.password : "";
+  const cuerpo = (await request.json().catch(() => null)) as {
+    password?: unknown;
+    correo?: unknown;
+  } | null;
 
-  if (!(await comprobarPassword(password))) {
+  const password = typeof cuerpo?.password === "string" ? cuerpo.password : "";
+  const correo = typeof cuerpo?.correo === "string" ? normalizar(cuerpo.correo) : "";
+
+  const sesion = correo ? await entrarComoEmpleado(correo, password) : await entrarComoAdmin(password);
+  if (!sesion) {
     return NextResponse.json({ ok: false, error: "bad_password" }, { status: 401 });
   }
 
-  const sesion = await crearSesion();
   const respuesta = NextResponse.json({ ok: true });
   respuesta.cookies.set(COOKIE, sesion.value, {
     httpOnly: true,
@@ -40,6 +56,27 @@ export async function POST(request: Request) {
     maxAge: sesion.maxAge,
   });
   return respuesta;
+}
+
+async function entrarComoAdmin(password: string): Promise<CookieSesion | null> {
+  return (await comprobarPassword(password)) ? crearSesionAdmin() : null;
+}
+
+/**
+ * Dos puertas seguidas y las dos tienen que abrirse: la lista del
+ * administrador dice quién puede entrar, y el servidor de correo dice si la
+ * contraseña es suya. Ni una casilla real sin autorizar, ni una autorizada sin
+ * su clave.
+ */
+async function entrarComoEmpleado(
+  correo: string,
+  password: string,
+): Promise<CookieSesion | null> {
+  if (!servidorHabilitado() || !password) return null;
+  if (!(await estaEnEquipo(correo))) return null;
+  if (!(await credencialesValidas({ usuario: correo, password }))) return null;
+
+  return crearSesionEmpleado(correo, password);
 }
 
 /** Cerrar sesión. */

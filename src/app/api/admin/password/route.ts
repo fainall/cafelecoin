@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
-import { exigirSesion } from "@/lib/admin/guardia";
-import { cambiarPassword, COOKIE, crearSesion } from "@/lib/admin/sesion";
+import { exigirAdmin } from "@/lib/admin/guardia";
+import { cambiarPassword, COOKIE, crearSesionAdmin } from "@/lib/admin/sesion";
 import { clientIp, createMemoryRateLimiter } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
@@ -13,7 +13,7 @@ const limiter = createMemoryRateLimiter({ limit: 5, windowMs: 15 * 60 * 1000 });
 
 /** Cambia la contraseña del panel y renueva la sesión de quien la cambió. */
 export async function POST(request: Request) {
-  const rechazo = await exigirSesion();
+  const { rechazo } = await exigirAdmin();
   if (rechazo) return rechazo;
 
   const rate = await limiter.check(`admin-pass:${clientIp(request.headers)}`);
@@ -42,7 +42,7 @@ export async function POST(request: Request) {
 
   // La cookie vieja iba firmada con la clave anterior: sin esto, cambiar la
   // contraseña echaría del panel a quien acaba de cambiarla.
-  const sesion = await crearSesion();
+  const sesion = await crearSesionAdmin();
   const respuesta = NextResponse.json({ ok: true });
   respuesta.cookies.set(COOKIE, sesion.value, {
     httpOnly: true,

@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
 
-import { exigirSesion } from "@/lib/admin/guardia";
+import { exigirAdmin } from "@/lib/admin/guardia";
 import { borrarCasilla, crearCasilla, listarCasillas } from "@/lib/correo/cpanel";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  const rechazo = await exigirSesion();
+  const { rechazo } = await exigirAdmin();
   if (rechazo) return rechazo;
 
   try {
@@ -19,7 +19,7 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const rechazo = await exigirSesion();
+  const { rechazo } = await exigirAdmin();
   if (rechazo) return rechazo;
 
   const cuerpo = (await request.json().catch(() => null)) as {
@@ -56,7 +56,7 @@ export async function POST(request: Request) {
 }
 
 export async function DELETE(request: Request) {
-  const rechazo = await exigirSesion();
+  const { rechazo } = await exigirAdmin();
   if (rechazo) return rechazo;
 
   const email = new URL(request.url).searchParams.get("email") ?? "";

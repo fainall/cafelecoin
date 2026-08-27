@@ -21,10 +21,11 @@ vi.mock("./repositorio", () => ({
 const {
   cambiarPassword,
   comprobarPassword,
-  crearSesion,
+  crearSesionAdmin,
+  crearSesionEmpleado,
+  leerSesion,
   puedeCambiarPassword,
   resumirPassword,
-  sesionValida,
 } = await import("./sesion");
 
 const DEL_ENTORNO = "clave-del-entorno";
@@ -35,7 +36,7 @@ beforeEach(() => {
   process.env.ADMIN_PASSWORD = DEL_ENTORNO;
 });
 
-describe("credencial vigente", () => {
+describe("credencial del administrador", () => {
   it("acepta la del entorno cuando no hay ninguna guardada", async () => {
     expect(await comprobarPassword(DEL_ENTORNO)).toBe(true);
     expect(await comprobarPassword("otra cosa")).toBe(false);
@@ -80,27 +81,99 @@ describe("cambio de contraseña", () => {
   });
 });
 
-describe("sesiones", () => {
+describe("sesión de administrador", () => {
   it("acepta la cookie que acaba de emitir", async () => {
-    const sesion = await crearSesion();
-    expect(await sesionValida(sesion.value)).toBe(true);
+    const sesion = await leerSesion((await crearSesionAdmin()).value);
+    expect(sesion?.rol).toBe("admin");
   });
 
   it("rechaza una cookie manipulada, vacía o caducada", async () => {
-    const sesion = await crearSesion();
-    const [expira, firma] = sesion.value.split(".");
+    const { value } = await crearSesionAdmin();
+    const [cuerpo, firma] = value.split(".");
 
-    expect(await sesionValida(undefined)).toBe(false);
-    expect(await sesionValida(`${expira}.${"0".repeat(firma.length)}`)).toBe(false);
-    expect(await sesionValida(`${Date.now() + 9e9}.${firma}`)).toBe(false);
-    expect(await sesionValida(`${Date.now() - 1000}.${firma}`)).toBe(false);
+    expect(await leerSesion(undefined)).toBeNull();
+    expect(await leerSesion("")).toBeNull();
+    expect(await leerSesion(cuerpo)).toBeNull();
+    expect(await leerSesion(`${cuerpo}.${"A".repeat(firma.length)}`)).toBeNull();
+
+    // Alargar la caducidad exige refirmar, y sin la llave no se puede.
+    const estirada = Buffer.from(
+      JSON.stringify({ r: "admin", e: Date.now() + 9e9 }),
+      "utf8",
+    ).toString("base64url");
+    expect(await leerSesion(`${estirada}.${firma}`)).toBeNull();
   });
 
   it("cambiar la contraseña tumba las sesiones abiertas", async () => {
-    const vieja = await crearSesion();
+    const vieja = await crearSesionAdmin();
     await cambiarPassword(DEL_ENTORNO, "una-clave-nueva");
 
-    expect(await sesionValida(vieja.value)).toBe(false);
-    expect(await sesionValida((await crearSesion()).value)).toBe(true);
+    expect(await leerSesion(vieja.value)).toBeNull();
+    expect(await leerSesion((await crearSesionAdmin()).value)).not.toBeNull();
+  });
+});
+
+describe("sesión de empleado", () => {
+  const CORREO = "fernando@lecoin.cl";
+  const CLAVE = "la-del-buzon";
+
+  it("devuelve su casilla y su clave para poder abrir IMAP", async () => {
+    const { value } = await crearSesionEmpleado(CORREO, CLAVE);
+    const sesion = await leerSesion(value);
+
+    expect(sesion?.rol).toBe("empleado");
+    expect(sesion?.correo).toBe(CORREO);
+    expect(sesion?.claveCorreo).toBe(CLAVE);
+  });
+
+  it("no lleva la clave del buzón legible en la cookie", async () => {
+    const { value } = await crearSesionEmpleado(CORREO, CLAVE);
+
+    expect(value).not.toContain(CLAVE);
+    // El cuerpo va en base64url; descodificado tampoco debe aparecer.
+    const claro = Buffer.from(value.split(".")[0], "base64url").toString("utf8");
+    expect(claro).toContain(CORREO);
+    expect(claro).not.toContain(CLAVE);
+  });
+
+  it("no se puede cambiar de casilla ni ascender a admin editando la cookie", async () => {
+    const { value } = await crearSesionEmpleado(CORREO, CLAVE);
+    const [cuerpo, firma] = value.split(".");
+    const carga = JSON.parse(Buffer.from(cuerpo, "base64url").toString("utf8"));
+
+    const recodificar = (objeto: unknown) =>
+      Buffer.from(JSON.stringify(objeto), "utf8").toString("base64url");
+
+    // Apuntar a la casilla de otra persona.
+    const ajeno = recodificar({ ...carga, c: "otro@lecoin.cl" });
+    expect(await leerSesion(`${ajeno}.${firma}`)).toBeNull();
+
+    // Convertirse en administrador.
+    const ascendido = recodificar({ ...carga, r: "admin" });
+    expect(await leerSesion(`${ascendido}.${firma}`)).toBeNull();
+  });
+
+  it("una clave cifrada de otra sesión no se puede injertar", async () => {
+    const mia = await crearSesionEmpleado(CORREO, CLAVE);
+    const otra = await crearSesionEmpleado("otro@lecoin.cl", "otra-clave");
+
+    const cargaMia = JSON.parse(Buffer.from(mia.value.split(".")[0], "base64url").toString("utf8"));
+    const cargaOtra = JSON.parse(
+      Buffer.from(otra.value.split(".")[0], "base64url").toString("utf8"),
+    );
+
+    const injertada = Buffer.from(
+      JSON.stringify({ ...cargaMia, k: cargaOtra.k }),
+      "utf8",
+    ).toString("base64url");
+
+    expect(await leerSesion(`${injertada}.${mia.value.split(".")[1]}`)).toBeNull();
+  });
+
+  it("cambiar la contraseña del admin también cierra las del equipo", async () => {
+    const { value } = await crearSesionEmpleado(CORREO, CLAVE);
+    await cambiarPassword(DEL_ENTORNO, "una-clave-nueva");
+
+    expect(await leerSesion(value)).toBeNull();
   });
 });

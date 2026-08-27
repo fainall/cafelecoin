@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 
 import { Correo } from "./correo";
 import { Cuenta } from "./cuenta";
+import { Equipo } from "./equipo";
 import type { Backend } from "@/lib/admin/repositorio";
 import type { StoredLead } from "@/lib/leads/schema";
 import { orderStatuses, type OrderStatus, type StoredOrder } from "@/lib/orders/schema";
@@ -13,6 +14,7 @@ interface PanelAdminProps {
   solicitudes: StoredLead[];
   backend: Backend;
   puedeCambiarPassword: boolean;
+  puedeGestionarEquipo: boolean;
   correo: {
     gestionActiva: boolean;
     buzonActivo: boolean;
@@ -20,6 +22,9 @@ interface PanelAdminProps {
     casilla: string;
   };
 }
+
+type Vista = (typeof VISTAS)[number];
+const VISTAS = ["pedidos", "solicitudes", "correo", "equipo", "cuenta"] as const;
 
 /** Colores de cada estado: el vistazo tiene que bastar. */
 const TONO: Record<OrderStatus, string> = {
@@ -55,8 +60,9 @@ export function PanelAdmin({
   backend,
   correo,
   puedeCambiarPassword,
+  puedeGestionarEquipo,
 }: PanelAdminProps) {
-  const [vista, setVista] = useState<"pedidos" | "solicitudes" | "correo" | "cuenta">("pedidos");
+  const [vista, setVista] = useState<Vista>("pedidos");
   const [estados, setEstados] = useState<Record<string, OrderStatus>>({});
   const [guardando, setGuardando] = useState<string | null>(null);
 
@@ -131,7 +137,7 @@ export function PanelAdmin({
         </div>
 
         <nav className="border-forest-line mt-10 flex gap-8 border-b">
-          {(["pedidos", "solicitudes", "correo", "cuenta"] as const).map((cual) => (
+          {VISTAS.map((cual) => (
             <button
               key={cual}
               onClick={() => setVista(cual)}
@@ -144,7 +150,9 @@ export function PanelAdmin({
                   ? `Solicitudes (${solicitudes.length})`
                   : cual === "correo"
                     ? "Correo"
-                    : "Cuenta"}
+                    : cual === "equipo"
+                      ? "Equipo"
+                      : "Cuenta"}
             </button>
           ))}
         </nav>
@@ -159,6 +167,7 @@ export function PanelAdmin({
         )}
         {vista === "solicitudes" && <ListaSolicitudes solicitudes={solicitudes} />}
         {vista === "correo" && <Correo {...correo} />}
+        {vista === "equipo" && <Equipo puedeGestionar={puedeGestionarEquipo} dominio={correo.dominio} />}
         {vista === "cuenta" && <Cuenta puedeCambiar={puedeCambiarPassword} />}
       </div>
     </main>
