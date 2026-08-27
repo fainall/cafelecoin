@@ -64,7 +64,17 @@ async function uapi<T>(
     throw new Error(`cPanel respondió ${respuesta.status}`);
   }
 
-  const cuerpo = (await respuesta.json()) as RespuestaUapi<T>;
+  // Imunify360 y otras protecciones anti-bot interceptan la respuesta y
+  // devuelven un HTML con un JavaScript de reintento. Sin JS ese HTML
+  // llega tal cual y JSON.parse revienta. Mejor detectarlo y explicarlo.
+  const crudo = await respuesta.text();
+  if (crudo.trimStart().startsWith("<")) {
+    throw new Error(
+      "cPanel bloqueó la llamada (probable Imunify360). Crea las casillas desde el webmail o desde cPanel directamente.",
+    );
+  }
+
+  const cuerpo = JSON.parse(crudo) as RespuestaUapi<T>;
   // UAPI devuelve 200 con status 0 cuando la operación falla: el código HTTP
   // no basta para saber si salió bien.
   if (cuerpo.status !== 1) {
