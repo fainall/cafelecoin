@@ -32,5 +32,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   );
 
-  return [...home, ...lotPages];
+  // La tienda es la página que vende: sin ella en el sitemap, Google solo la
+  // encuentra si sigue un enlace, y hasta ahora no lo había hecho. El checkout
+  // queda fuera a propósito — es noindex.
+  const shop = locales.map((locale) => ({
+    url: `${base}/${locale}/tienda`,
+    lastModified,
+    changeFrequency: "weekly" as const,
+    priority: 0.9,
+    alternates: {
+      languages: Object.fromEntries(locales.map((code) => [code, `${base}/${code}/tienda`])),
+    },
+  }));
+
+  return [...home, ...shop, ...lotPages];
 }

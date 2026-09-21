@@ -10,9 +10,17 @@ export const localeLabels: Record<Locale, string> = {
   en: "English",
 };
 
-/** Códigos BCP-47 usados en <html lang> y en metadatos. */
+/**
+ * Códigos BCP-47 usados en <html lang>, en metadatos y al formatear cifras.
+ *
+ * El español es el de Chile, que es donde se vende, aunque el café sea de
+ * Colombia. La región decide dos cosas que se notan: a qué país le dice
+ * hreflang a Google que va dirigida la página, y cómo se escribe el precio —
+ * con es-CO el peso chileno sale «CLP 11.000», que es como un colombiano
+ * escribe una moneda extranjera; con es-CL sale «$11.000».
+ */
 export const localeTags: Record<Locale, string> = {
-  es: "es-CO",
+  es: "es-CL",
   en: "en",
 };
 
