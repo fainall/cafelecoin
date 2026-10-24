@@ -30,27 +30,14 @@ const TEXTOS = {
     pagina: "Le Coin · En mantenimiento",
     cuerpo:
       "Estamos poniendo a punto la tienda. Es cosa de un rato; el café sigue donde siempre, tostándose en Manizales.",
-    pedidos: "Si querías encargar, escríbenos y lo dejamos listo:",
-    whatsapp: "WhatsApp",
-    correo: "Correo",
-    instagram: "Instagram",
   },
   en: {
     titulo: "Back shortly",
     pagina: "Le Coin · Under maintenance",
     cuerpo:
       "We're tuning up the shop. It won't be long; the coffee is where it always is, roasting in Manizales.",
-    pedidos: "If you were about to order, write to us and we'll sort it out:",
-    whatsapp: "WhatsApp",
-    correo: "Email",
-    instagram: "Instagram",
   },
 } as const satisfies Record<Idioma, Record<string, string>>;
-
-/** Datos de contacto. Repetidos a propósito: esta página no importa nada. */
-const WHATSAPP = { enlace: "https://wa.me/56982668656", texto: "+56 9 8266 8656" };
-const CORREO = "info@lecoin.cl";
-const INSTAGRAM = { enlace: "https://www.instagram.com/cafelecoin.tienda/", texto: "@cafelecoin.tienda" };
 
 const escapar = (texto: string) =>
   texto.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]!);
@@ -80,10 +67,8 @@ export function paginaMantenimiento(idioma: Idioma = "es"): string {
     --forest-deep: #0f130d;
     --cream: #f6f3ec;
     --cream-dim: #c6c0af;
-    --cream-faint: #97927f;
     --gold: #ac9256;
     --gold-light: #d3ba82;
-    --linea: #303827;
   }
   * { box-sizing: border-box; }
   html, body { height: 100%; }
@@ -127,22 +112,7 @@ export function paginaMantenimiento(idioma: Idioma = "es"): string {
   .regla { width: 3.5rem; height: 1px; background: var(--gold); margin: 0 auto 1.75rem; opacity: 0.75; }
   p { margin: 0 0 1.25rem; font-size: clamp(1.1rem, 2vw, 1.3rem); line-height: 1.8; color: var(--cream-dim); }
   .nota { font-style: italic; color: var(--gold-light); }
-
-  .contacto { margin-top: 2.75rem; border-top: 1px solid var(--linea); padding-top: 1.75rem; }
-  .contacto p { font-size: 1rem; color: var(--cream-dim); margin-bottom: 1.5rem; }
-  ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem 2.5rem; }
-  a {
-    color: var(--cream); text-decoration: none; font-size: 1.05rem;
-    border-bottom: 1px solid rgba(172, 146, 86, 0.45);
-    padding-bottom: 2px; transition: color 0.2s, border-color 0.2s;
-  }
-  a:hover, a:focus-visible { color: var(--gold-light); border-color: var(--gold-light); }
-  .etiqueta {
-    display: block;
-    font-family: ui-sans-serif, system-ui, sans-serif;
-    font-size: 0.62rem; letter-spacing: 0.22em; text-transform: uppercase;
-    color: var(--cream-faint); margin-bottom: 0.4rem;
-  }
+  p:last-of-type { margin-bottom: 0; }
   /* Quien prefiere no ver movimiento, no lo ve. */
   @media (prefers-reduced-motion: reduce) { .mancha { animation: none; opacity: 0.65; } }
 </style>
@@ -195,24 +165,6 @@ export function paginaMantenimiento(idioma: Idioma = "es"): string {
     <div class="regla"></div>
     <p>${escapar(t.cuerpo)}</p>
     ${nota ? `<p class="nota">${escapar(nota)}</p>` : ""}
-
-    <div class="contacto">
-      <p>${escapar(t.pedidos)}</p>
-      <ul>
-        <li>
-          <span class="etiqueta">${escapar(t.whatsapp)}</span>
-          <a href="${WHATSAPP.enlace}" rel="noopener">${WHATSAPP.texto}</a>
-        </li>
-        <li>
-          <span class="etiqueta">${escapar(t.correo)}</span>
-          <a href="mailto:${CORREO}">${CORREO}</a>
-        </li>
-        <li>
-          <span class="etiqueta">${escapar(t.instagram)}</span>
-          <a href="${INSTAGRAM.enlace}" rel="noopener">${INSTAGRAM.texto}</a>
-        </li>
-      </ul>
-    </div>
   </main>
 </body>
 </html>`;
